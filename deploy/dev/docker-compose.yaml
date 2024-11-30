@@ -1,0 +1,127 @@
+# 命令执行 docker-compose -f docker-compose.yml up -d
+version: '3.9'
+networks:
+  goservice:
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:8.0.32
+    container_name: goservice_mysql
+    hostname: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: a12346
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: a12346
+    networks:
+      - goservice
+    ports:
+      - "13306:3306"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+
+  # phpmyadmin https://hub.docker.com/_/phpmyadmin
+  mysqladmin:
+    image: phpmyadmin:5.2.1
+    container_name: goservice_mysql-admin
+    hostname: phpmyadmin
+    ports:
+      - 10001:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PORT=3306
+      - MYSQL_ROOT_PASSWORD=123456
+    networks:
+      -  goservice
+
+
+
+  # 配置密码的情况下，volumes 添加 ./redis/users.acl:/usr/local/etc/redis/users.acl redis.conf 需要补充 aclfile /usr/local/etc/redis/users.acl
+  redis:
+    image: redis:7.2.0
+    container_name: goservice_redis
+    restart: always
+    hostname: redis
+    ports:
+      - 16379:6379
+    volumes:
+      - ./data/redis:/data
+#      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+#    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - goservice
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis-admin:
+    image: erikdubbelboer/phpredisadmin
+    container_name: goservice_redis-admin
+    hostname: redis-commander
+    restart: always
+    ports:
+      - 10002:80
+    environment:
+      - ADMIN_USER=admin           # 设置 Redis 可视化管理的用户名称
+      - ADMIN_PASS=123456           # 设置 Redis 可视化管理的用户密码
+      - REDIS_1_HOST=redis     # 设置连接的 Redis 服务 host，可以是 Redis 服务容器的名称，也可以是 Redis 服务容器的 ip 地址
+      - REDIS_1_PORT=6379     # 设置连接的 Redis 服务端口号
+    networks:
+      - goservice
+    depends_on:
+      redis:
+        condition: service_healthy
+
+#  可观测性
+  observe:
+    image: public.ecr.aws/zinclabs/openobserve:v0.10.7
+    container_name: goservice_observe
+    environment:
+      TZ: Asia/Shanghai
+      ZO_DATA_DIR: "/data"
+      ZO_ROOT_USER_EMAIL: "root@qq.com"
+      ZO_ROOT_USER_PASSWORD: "123456"
+    volumes:
+      - "./data/observe:/data"
+    ports:
+      - "15080:5080"
+    networks:
+      - goservice
+#  主程序
+  admin:
+    image: golang:1.23
+    container_name: goservice_admin
+    environment:
+      TZ: Asia/Shanghai
+      GOPROXY: https://goproxy.cn
+    ports:
+      - "10080:80"
+    depends_on: # 依赖容器
+      - redis
+      - mysql
+    stdin_open: true
+    networks:
+      - goservice
+    working_dir: /app
+    volumes:
+      - "../../.:/app"
+    command: "sh"
+#    command: "main -f config/config.yaml run"
+    restart: "always"

@@ -1,0 +1,40 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  dockerName: goservice_admin
+
+includes:
+  dev:
+    taskfile: ./task/dev/Taskfile.yml
+
+  debug:
+    taskfile: ./task/debug/Taskfile.yml
+
+
+  prod:
+    taskfile: ./task/prod/Taskfile.yml
+
+  deploy:
+    taskfile: ./task/deploy/Taskfile.yml
+
+
+
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  dev:
+    dir: ./cmd/service
+    cmds:
+      - go run -race -tags=forceposix main.go {{.CLI_ARGS}}
+  lint:
+    cmds:
+      - golangci-lint run
+
+
+

@@ -1,0 +1,47 @@
+#https://golangci-lint.run/welcome/quick-start/
+run:
+  tests: false
+#  skip-dirs:
+#    - "internal/ctx"
+issues:
+
+  exclude-dirs:
+    - "internal/ctx"
+    - "doc"
+    - "config"
+    - "deploy"
+
+  exclude-files:
+    - ".*\\.exe"
+
+linters:
+  enable:
+    - funlen
+    - goconst
+    - nolintlint
+    - perfsprint
+    - prealloc
+    - predeclared
+    - revive
+    - sqlclosecheck
+    - tagliatelle
+    - iface
+    - importas
+    - copyloopvar
+    - cyclop
+    - decorder
+
+linters-settings:
+  funlen:
+    lines: 120
+    statements: -1
+
+  revive:
+    rules:
+      # 禁用 receiver-naming 规则
+    - name: receiver-naming
+      severity: warning
+      disabled: true
+      exclude: [""]
+      arguments:
+        - maxLength: 2

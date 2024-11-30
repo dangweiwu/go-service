@@ -1,0 +1,29 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+includes:
+  common:
+    taskfile: ../Taskfile.yml
+    dir: ../../
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  dockerinit:
+    cmds:
+      - docker-compose -p goservice -f ./deploy/dev/docker-compose.yaml up -d
+  run:
+    cmds:
+      - task: common:lint
+      - docker exec -it {{.dockerName}} go run ./cmd/service/main.go -f ./config/config.yaml run
+  localRun:
+    cmds:
+      - task: common:lint
+      - go run ./cmd/service/main.go -f ./config/config.yaml run
+
