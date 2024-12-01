@@ -25,8 +25,6 @@ tasks:
       - docker exec -it {{.dockerName}} go run ./cmd/service/main.go -f ./config/config.yaml run
   localRun:
     cmds:
-      - ls
-      - pwd
       - task: common:lint
-      - go run -tags=forceposix ./cmd/service/main.go -f ./config/config.yaml run
+      - go run -race -tags=forceposix ./cmd/service/main.go -f ./config/config.yaml run
 

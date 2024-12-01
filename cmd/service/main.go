@@ -6,7 +6,19 @@ import (
 	"os"
 )
 
+var (
+	GitCommit = "None"
+	Version   = "None"
+	GitBranch = "None"
+	BuildTS   = "None"
+)
+
 func main() {
+	option.Versionstr = Version
+	option.GitCommit = GitCommit
+	option.GitBranch = GitBranch
+	option.BuildTS = BuildTS
+
 	p := flags.NewParser(&option.Opt, flags.Default)
 	p.ShortDescription = "v1.0 server"
 	p.LongDescription = `v1.0 Server`
@@ -22,4 +34,5 @@ func main() {
 			os.Exit(1)
 		}
 	}
+
 }
