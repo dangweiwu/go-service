@@ -13,7 +13,6 @@ includes:
   debug:
     taskfile: ./task/debug/Taskfile.yml
 
-
   prod:
     taskfile: ./task/prod/Taskfile.yml
 
@@ -28,7 +27,7 @@ tasks:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
-  dev:
+  devm:
     dir: ./cmd/service
     cmds:
       - go run -race -tags=forceposix main.go {{.CLI_ARGS}}

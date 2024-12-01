@@ -6,5 +6,7 @@ import (
 )
 
 func RegMiddler(actx *appctx.AppCtx) []gin.HandlerFunc {
-	return []gin.HandlerFunc{}
+	return []gin.HandlerFunc{
+		Cors(),
+	}
 }

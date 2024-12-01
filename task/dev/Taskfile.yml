@@ -20,10 +20,13 @@ tasks:
       - docker-compose -p goservice -f ./deploy/dev/docker-compose.yaml up -d
   run:
     cmds:
+      - go mod tidy
       - task: common:lint
       - docker exec -it {{.dockerName}} go run ./cmd/service/main.go -f ./config/config.yaml run
   localRun:
     cmds:
+      - ls
+      - pwd
       - task: common:lint
-      - go run ./cmd/service/main.go -f ./config/config.yaml run
+      - go run -tags=forceposix ./cmd/service/main.go -f ./config/config.yaml run
 

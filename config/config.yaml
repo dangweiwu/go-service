@@ -10,12 +10,14 @@ mysql:
   user: root
   password: "a12346"
   host: 127.0.0.1:13306
+#  host: mysql:3306
   dbName: goservice
   logFile:
   logLevel: 4
 
 redis:
   addr: 127.0.0.1:16379
+#  addr: redis:6379
   password: ""
   db: 0
 

@@ -10,6 +10,7 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 	"net/http"
 	"path"
+	"sync"
 )
 
 func Start(appctx *appctx.AppCtx) (err error) {
@@ -41,6 +42,7 @@ func Start(appctx *appctx.AppCtx) (err error) {
 	}
 	go func() {
 		err = ginRun(appctx, engine)
+
 		if err != nil {
 			if err == http.ErrServerClosed {
 				appctx.ApiLog.Msg("api服务安全关闭").Info()
@@ -58,34 +60,46 @@ func Start(appctx *appctx.AppCtx) (err error) {
 }
 
 func ginRun(actx *appctx.AppCtx, engin *gin.Engine) (err error) {
-	var server *http.Server
+	var (
+		server *http.Server
+		m      *autocert.Manager
+		mu     sync.Mutex // 互斥锁，用于保护 server 变量
+	)
+
 	go func() {
 		//安全关闭
 		<-actx.Ctx.Done()
+		mu.Lock()
 		if server != nil {
 			err := server.Shutdown(actx.Ctx)
 			if err != nil {
 				actx.ApiLog.Msg("api服务关闭失败").ErrData(err).Err()
 			}
 		}
+		mu.Unlock()
 	}()
 
 	if len(actx.Config.Api.Domain) == 0 {
+		mu.Lock()
 		server = &http.Server{
 			Addr:    actx.Config.Api.Host,
 			Handler: engin,
 		}
+		mu.Unlock()
 		return server.ListenAndServe()
 
 	} else {
-		m := &autocert.Manager{
+		m = &autocert.Manager{
 			Prompt:     autocert.AcceptTOS,                                      // 接受 Let's Encrypt 的服务条款
 			Cache:      autocert.DirCache(path.Join(actx.Config.Root, "cache")), // 存储证书的位置
 			HostPolicy: autocert.HostWhitelist(actx.Config.Api.Domain),          // 允许的域名
 		}
+		mu.Lock()
 		server = &http.Server{
 			Handler: engin,
 		}
+		mu.Unlock()
 		return server.Serve(m.Listener())
 	}
+
 }

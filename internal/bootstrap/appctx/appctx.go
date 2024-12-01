@@ -5,12 +5,12 @@ import (
 	"context"
 	"go-service/internal/bootstrap/basectx"
 	"go-service/internal/config"
-	"go-service/internal/service/serviceboot"
+	"go-service/internal/service"
 )
 
 type AppCtx struct {
 	*basectx.BaseCtx
-	*serviceboot.ServiceCtx
+	*service.ServiceCtx
 }
 
 func NewAppCtx(ctx context.Context, cancel context.CancelFunc, cfg config.Config) (*AppCtx, error) {
@@ -23,7 +23,7 @@ func NewAppCtx(ctx context.Context, cancel context.CancelFunc, cfg config.Config
 	a.BaseCtx = bctx
 
 	//服务依赖
-	sctx, err := serviceboot.Start(bctx)
+	sctx, err := service.Start(bctx)
 	if err != nil {
 		return nil, err
 	}
