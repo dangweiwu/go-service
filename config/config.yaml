@@ -27,3 +27,8 @@ api:
   viewDir : ./view
   mode: debug
   domain: ""
+
+
+pprof:
+  host: 0.0.0.0:8080
+  enable: false

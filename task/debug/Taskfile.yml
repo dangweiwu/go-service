@@ -10,3 +10,24 @@ tasks:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
+
+  pprofHeap:
+    cmds:
+      - go tool pprof -http=:8010 http://127.0.0.1:8080/debug/pprof/heap
+  pprofGrout:
+    cmds:
+      - go tool pprof -http=:8010 http://127.0.0.1:8080/debug/pprof/goroutine
+  pprofProfile:
+    cmds:
+      - go tool pprof -http=:8010 http://127.0.0.1:8080/debug/pprof/profile?seconds=30
+  pprofProfile1:
+    cmds:
+      - go tool pprof http://127.0.0.1:8080/debug/pprof/profile?seconds=30
+
+#  pproftrace:
+#    cmds:
+#      - go tool pprof -http=:8010 http://127.0.0.1:8080/debug/pprof/trace?seconds=30
+#
+#  pproftrace1:
+#    cmds:
+#      - go tool pprof http://127.0.0.1:8080/debug/pprof/trace?seconds=30
