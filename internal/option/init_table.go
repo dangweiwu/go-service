@@ -1,5 +1,14 @@
 package option
 
+import (
+	"context"
+	"github.com/dangweiwu/microkit/yamlconfig"
+	"go-service/internal/apiservice/app"
+	"go-service/internal/bootstrap/appctx"
+	"go-service/internal/config"
+	"log"
+)
+
 type InitTable struct {
 }
 
@@ -8,5 +17,20 @@ func (*InitTable) Usage() string {
 }
 
 func (this *InitTable) Execute(args []string) error {
+	var c config.Config
+	yamlconfig.MustLoad(Opt.ConfigPath, &c)
+
+	ctx, cf := context.WithCancel(context.Background())
+
+	ctx2, err := appctx.NewAppCtx(ctx, cf, c)
+	if err != nil {
+		log.Panic(err)
+		return err
+	}
+	err = app.Regdb(ctx2)
+	if err != nil {
+		log.Panic(err)
+	}
+
 	return nil
 }

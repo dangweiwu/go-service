@@ -7,11 +7,21 @@ import (
 	"strconv"
 )
 
+type Giner interface {
+	GetId() (int64, error)
+	GetUrlkey(name string) (string, error)
+	Bind(po interface{}) error
+	Rep(data interface{})
+	RepOk()
+	ErrCode(msg string, data string) ErrResponse
+	ErrMsg(msg string, data string) ErrResponse
+}
+
 type Ginx struct {
 	Gctx *gin.Context
 }
 
-func NewHd(ctx *gin.Context) *Ginx {
+func New(ctx *gin.Context) *Ginx {
 	return &Ginx{ctx}
 }
 

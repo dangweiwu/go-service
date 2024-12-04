@@ -10,7 +10,8 @@ import (
 )
 
 type Config struct {
-	Root  string              `yaml:"root" default:"abc" validate:"oneof=abc ./"`
+	Root  string              `yaml:"root" default:"./" validate:"required"`
+	Salt  string              `yaml:"salt" default:"abcdefg" validate:"required"`
 	Log   logx.Config         `yaml:"log"`
 	Mysql mysqlx.Config       `yaml:"mysql"`
 	Redis redisx.Config       `yaml:"redis"`

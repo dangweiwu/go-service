@@ -8,14 +8,14 @@ import (
 )
 
 type HelloGoService struct {
-	*ginx.Ginx
+	ginx.Giner
 	ctx *appctx.AppCtx
 }
 
 func NewHelloGoService(ctx *appctx.AppCtx, gctx *gin.Context) router.Handler {
 	return &HelloGoService{
-		Ginx: ginx.NewHd(gctx),
-		ctx:  ctx,
+		Giner: ginx.New(gctx),
+		ctx:   ctx,
 	}
 }
 

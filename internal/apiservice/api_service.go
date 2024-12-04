@@ -41,7 +41,7 @@ func Start(appctx *appctx.AppCtx) (err error) {
 		return
 	}
 	go func() {
-		err = ginRun(appctx, engine)
+		err := ginRun(appctx, engine)
 
 		if err != nil {
 			if err == http.ErrServerClosed {

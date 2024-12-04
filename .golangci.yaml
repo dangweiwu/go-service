@@ -45,3 +45,8 @@ linters-settings:
       exclude: [""]
       arguments:
         - maxLength: 2
+  tagliatelle:
+    case:
+      use-field-name: true
+      rules:
+        json: snake

@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-service/internal/apiservice/middler"
 	"go-service/internal/apiservice/pkg/ginx"
 	"go-service/internal/bootstrap/appctx"
 )
@@ -36,7 +35,8 @@ type Router struct {
 func NewRouter(actx *appctx.AppCtx, g *gin.Engine) *Router {
 	return &Router{
 		Root: g.Group("/api"),
-		Jwt:  g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx)),
-		Auth: g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx), middler.CheckAuth(actx)),
+		//Jwt:  g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx)),
+		//Auth: g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx), middler.CheckAuth(actx)),
+		Auth: g.Group("/api"),
 	}
 }

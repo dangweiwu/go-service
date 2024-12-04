@@ -18,6 +18,9 @@ tasks:
   dockerinit:
     cmds:
       - docker-compose -p goservice -f ./deploy/dev/docker-compose.yaml up -d
+  doc:
+    - go install github.com/dangweiwu/apidoc@v1.0.3
+    - apidoc run
   run:
     cmds:
       - go mod tidy
@@ -27,4 +30,12 @@ tasks:
     cmds:
       - task: common:lint
       - go run -race -tags=forceposix ./cmd/service/main.go -f ./config/config.yaml run
+  localInitdb:
+    cmds:
+      - task: common:lint
+      - go run ./cmd/service/main.go -f ./config/config.yaml inittable
+  localInitUser:
+    cmds:
+      - task: common:lint
+      - go run ./cmd/service/main.go -f ./config/config.yaml inituser -p a123456
 

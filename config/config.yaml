@@ -1,5 +1,5 @@
 root: ./
-
+salt: abcd#$%1986123
 log:
   logName: ./log/api.log
   outType: all

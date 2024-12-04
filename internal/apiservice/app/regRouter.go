@@ -2,13 +2,15 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-service/internal/apiservice/app/admin/admin"
 	"go-service/internal/apiservice/app/hellogoservice"
 	"go-service/internal/apiservice/router"
 	"go-service/internal/bootstrap/appctx"
 )
 
 var routes = []func(actx *appctx.AppCtx, r *router.Router){
-	hellogoservice.Router,
+	hellogoservice.Route,
+	admin.Route,
 }
 
 func InitRouter(actx *appctx.AppCtx, g *gin.Engine) {

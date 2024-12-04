@@ -12,6 +12,5 @@ func RegMiddler(actx *appctx.AppCtx) []gin.HandlerFunc {
 		Cors(),
 		Recovery(actx),
 		ApiLog(actx),
-		TokenParse(actx),
 	}
 }
