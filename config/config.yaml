@@ -32,3 +32,8 @@ api:
 pprof:
   host: 0.0.0.0:8080
   enable: false
+
+jwt:
+  secret: "abc#@1232"
+  # 3天过期时间
+  exp: 259200
