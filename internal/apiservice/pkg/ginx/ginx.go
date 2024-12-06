@@ -7,14 +7,66 @@ import (
 	"strconv"
 )
 
+var _ Giner = (*Ginx)(nil)
+
 type Giner interface {
 	GetId() (int64, error)
 	GetUrlkey(name string) (string, error)
 	Bind(po interface{}) error
+	ShouldBindQuery(obj any) error
+	Query(key string) (value string)
 	Rep(data interface{})
 	RepOk()
 	ErrCode(msg string, data string) ErrResponse
 	ErrMsg(msg string, data string) ErrResponse
+}
+
+type EmptyGinx struct {
+}
+
+func (e EmptyGinx) GetId() (int64, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) GetUrlkey(name string) (string, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) Bind(po interface{}) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) ShouldBindQuery(obj any) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) Query(key string) (value string) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) Rep(data interface{}) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) RepOk() {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) ErrCode(msg string, data string) ErrResponse {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (e EmptyGinx) ErrMsg(msg string, data string) ErrResponse {
+	//TODO implement me
+	panic("implement me")
 }
 
 type Ginx struct {
@@ -63,4 +115,12 @@ func (this *Ginx) ErrCode(msg string, data string) ErrResponse {
 
 func (this *Ginx) ErrMsg(msg string, data string) ErrResponse {
 	return ErrResponse{MSG, data, msg}
+}
+
+func (this *Ginx) ShouldBindQuery(obj any) error {
+	return this.Gctx.ShouldBindQuery(obj)
+}
+
+func (this *Ginx) Query(key string) (value string) {
+	return this.Gctx.Query(key)
 }

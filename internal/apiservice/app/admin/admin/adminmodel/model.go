@@ -54,6 +54,8 @@ type AdminVo struct {
 	Role         string `json:"role" gorm:"size:100;not null;index;comment:角色" binding:"max=100" doc:"|d 角色ID"`
 }
 
+var AdminViewField = []string{"id", "created_at", "updated_at", "account", "phone", "name", "status", "memo", "email", "is_super_admin", "role"}
+
 func (AdminVo) TableName() string {
 	return ADMIN_TABLE
 }

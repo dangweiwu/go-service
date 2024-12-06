@@ -28,7 +28,6 @@ tasks:
         -X "main.BuildTS={{.BUILD_TS}}"'
         -tags=forceposix -o ./deploy/prod/main.exe ./cmd/service/main.go
   version:
-
     cmds:
       - pwd
       - ls

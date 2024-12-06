@@ -11,6 +11,7 @@ func Route(appctx *appctx.AppCtx, r *router.Router) {
 	//r.Auth.GET("/admin", router.Do(appctx, api.NewAdminQuery))
 
 	r.Auth.POST("/admin", router.Do(appctx, api.NewAdminCreate))
+	r.Auth.GET("/admin", router.Do(appctx, api.NewAdminQuery))
 
 	//r.Auth.PUT("/admin/:id", router.Do(appctx, api.NewAdminUpdate))
 	//s

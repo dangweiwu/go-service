@@ -35,11 +35,11 @@ func Start(appctx *appctx.AppCtx) (err error) {
 	app.InitRouter(appctx, engine)
 	pkg.NewAllUrl(engine).InitUrl()
 	//注册所有数据库
-	err = app.Regdb(appctx)
-	if err != nil {
-		appctx.ApiLog.Msg("注册数据库失败").ErrData(err).Err()
-		return
-	}
+	//err = app.Regdb(appctx)
+	//if err != nil {
+	//	appctx.ApiLog.Msg("注册数据库失败").ErrData(err).Err()
+	//	return
+	//}
 	go func() {
 		err := ginRun(appctx, engine)
 
