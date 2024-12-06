@@ -73,6 +73,8 @@ type AdminUpdateForm struct {
 	Role         string `json:"role" gorm:"size:100;not null;index;comment:角色" binding:"max=100" doc:"|d 角色ID"`                                                      //角色
 }
 
+var AdminUpdateField = []string{"id", "updated_at", "phone", "name", "status", "memo", "email", "is_super_admin", "role"}
+
 func (AdminUpdateForm) TableName() string {
 	return ADMIN_TABLE
 }
