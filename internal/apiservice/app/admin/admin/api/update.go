@@ -1,10 +1,13 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app/admin/admin/adminmodel"
+	"go-service/internal/apiservice/app/admin/me/memodel"
 	"go-service/internal/apiservice/pkg/ginx"
+	"go-service/internal/apiservice/pkg/jwtx"
 	"go-service/internal/apiservice/router"
 	"go-service/internal/bootstrap/appctx"
 	"gorm.io/gorm"
@@ -52,30 +55,30 @@ func (this *AdminUpdate) Update(po *adminmodel.AdminUpdateForm) error {
 	db := this.appctx.Db
 	tmpPo := &adminmodel.AdminUpdateForm{}
 	tmpPo.ID = po.ID
-	if r := db.Model(tmpPo).Take(tmpPo); r.Error != nil {
+	if r := db.Model(tmpPo).Select(adminmodel.AdminUpdateField).Take(tmpPo); r.Error != nil {
 		if r.Error == gorm.ErrRecordNotFound {
 			return errors.New("记录不存在")
 		} else {
 			return r.Error
 		}
 	}
-	//uid, err :=  this.appctx.GetUid(this.ctx)
-	//if err != nil {
-	//	return err
-	//}
+	uid, err := jwtx.GetUserid(this.ctx)
+	if err != nil {
+		return err
+	}
 	//
-	//if uid == po.ID {
-	//	return errors.New("禁止修改自己")
-	//}
+	if uid == po.ID {
+		return errors.New("禁止修改自己")
+	}
 
 	//更新
 	if r := db.Select(adminmodel.AdminUpdateField).Updates(po); r.Error != nil {
 		return r.Error
 	}
-	//修改人员下线
-	//if (tmpPo.Status == "1" && po.Status == "0") || tmpPo.Role != po.Role {
-	//	this.appctx.Redis.Del(context.Background(), mymodel.GetAdminRedisLoginId(int(tmpPo.ID)))
-	//}
+	//被修改人下线
+	if (tmpPo.Status != po.Status) || tmpPo.Role != po.Role {
+		this.appctx.Redis.Del(context.Background(), memodel.GetAdminRedisLoginId(int(tmpPo.ID)))
+	}
 
 	return nil
 }

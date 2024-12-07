@@ -44,7 +44,7 @@ func (this *InitSuperUser) Execute(args []string) error {
 			log.Println("初始化超级管理员")
 			po.Account = "admin"
 			po.Name = "超级管理员"
-
+			po.IsSuperAdmin = "1"
 			po.Password = pw
 			po.Role = "admin"
 			po.Status = "1"
@@ -61,6 +61,7 @@ func (this *InitSuperUser) Execute(args []string) error {
 	if r := ctx2.Db.Model(po).Update("password", pw); r.Error != nil {
 		return r.Error
 	}
+	log.Println("密码已重置:", this.Password)
 
 	return nil
 }

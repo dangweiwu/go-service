@@ -12,6 +12,5 @@ func Route(appctx *appctx.AppCtx, r *router.Router) {
 	r.Auth.GET("/admin", router.Do(appctx, api.NewAdminQuery))
 	r.Auth.PUT("/admin/:id", router.Do(appctx, api.NewAdminUpdate))
 	r.Auth.DELETE("/admin/:id", router.Do(appctx, api.NewAdminDel))
-	//
-	//r.Auth.PUT("/admin/resetpwd/:id", router.Do(appctx, api.NewResetPassword))
+	r.Auth.PUT("/admin/resetpwd/:id", router.Do(appctx, api.NewResetPassword))
 }

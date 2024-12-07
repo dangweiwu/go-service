@@ -1,10 +1,13 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app/admin/admin/adminmodel"
+	"go-service/internal/apiservice/app/admin/me/memodel"
 	"go-service/internal/apiservice/pkg/ginx"
+	"go-service/internal/apiservice/pkg/jwtx"
 	"go-service/internal/apiservice/router"
 	"go-service/internal/bootstrap/appctx"
 	"gorm.io/gorm"
@@ -28,7 +31,7 @@ func NewAdminDel(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @urlparam |n id |d 用户ID |v required |t int    |e 1
 // @tbtitle  | 200 Response
 // @tbrow    |n data |e ok |c 成功 |t type
-// @response | hd.ErrResponse | 500 RESPONSE
+// @response | ginx.ErrResponse | 500 RESPONSE
 // @tbtitle  | msg 数据
 // @tbrow    |n msg |e 禁止删除自己
 // @tbrow    |n msg |e 记录不存在
@@ -39,14 +42,14 @@ func (this *AdminDel) Do() error {
 		return err
 	}
 
-	//uid, err := this.appctx.GetUid(this.ctx)
-	//if err != nil {
-	//	return err
-	//}
+	uid, err := jwtx.GetUserid(this.ctx)
+	if err != nil {
+		return err
+	}
 	//
-	//if id == uid {
-	//	return errors.New("禁止删除自己")
-	//}
+	if id == uid {
+		return errors.New("禁止删除自己")
+	}
 
 	if err := this.Delete(id); err != nil {
 		return err
@@ -60,7 +63,7 @@ func (this *AdminDel) Delete(id int64) error {
 	db := this.appctx.Db
 	po := &adminmodel.AdminPo{}
 	po.ID = id
-	if r := db.Take(po); r.Error != nil {
+	if r := db.Select(adminmodel.AdminViewField).Take(po); r.Error != nil {
 		if r.Error == gorm.ErrRecordNotFound {
 			return errors.New("记录不存在")
 		} else {
@@ -70,5 +73,7 @@ func (this *AdminDel) Delete(id int64) error {
 	if r := db.Delete(po); r.Error != nil {
 		return r.Error
 	}
+	this.appctx.Redis.Del(context.Background(), memodel.GetAdminRedisLoginId(int(po.ID)))
+
 	return nil
 }

@@ -26,13 +26,13 @@ type Token struct {
 	SecretKey string //密钥
 	Exp       int64  //过期时间
 	UserId    int64  //用户id
-	IsSuper   bool   //是否是超管
+	IsSuper   string //是否是超管
 	LoginCode string //登陆code
 	Kind      int    //类型
 	Role      string //角色
 }
 
-func GenToken(t Token) (string, error) {
+func (t Token) Gen() (string, error) {
 	claims := make(jwt.MapClaims) //数据仓声明
 	now := time.Now().Unix()
 	claims["iat"] = now
