@@ -53,7 +53,7 @@ func (this *AdminCreate) Create(po *adminmodel.AdminForm) error {
 		return err
 	}
 
-	pwd, err := pkg.GetPassword(po.Password, this.appctx.Config.Salt)
+	pwd, err := pkg.GetPassword(po.Password)
 	if err != nil {
 		return fmt.Errorf("创建账号失败:%w", err)
 	}

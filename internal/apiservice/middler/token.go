@@ -26,7 +26,7 @@ func RefuseResponse(c *gin.Context) {
 }
 
 func ErrToken(c *gin.Context, err error) {
-	c.JSON(400, ginx.ErrResponse{Kind: ginx.MSG, Data: err.Error(), Msg: "取消鉴权"})
+	c.JSON(400, ginx.ErrResponse{Kind: ginx.MSG, Data: err.Error(), Msg: "无效token"})
 	c.Abort()
 }
 

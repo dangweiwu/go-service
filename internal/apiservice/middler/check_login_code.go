@@ -23,6 +23,7 @@ func LoginCodeErrResponse(c *gin.Context, err error) {
 
 func CheckLoginCode(appctx *appctx.AppCtx) gin.HandlerFunc {
 	return func(c *gin.Context) {
+
 		code, err := jwtx.GetLoginCode(c)
 		if err != nil {
 			LoginCodeErrResponse(c, fmt.Errorf("code:%w", err))

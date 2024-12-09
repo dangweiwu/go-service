@@ -32,7 +32,7 @@ func (this *InitSuperUser) Execute(args []string) error {
 	}
 
 	po := &adminmodel.AdminPo{}
-	pw, err := pkg.GetPassword(this.Password, ctx2.Config.Salt)
+	pw, err := pkg.GetPassword(this.Password)
 
 	if err != nil {
 		return err

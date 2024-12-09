@@ -67,7 +67,7 @@ func (this *Login) Login(form *memodel.LoginForm) (*memodel.LogRep, error) {
 		return nil, err
 	}
 
-	pwd, err := pkg.GetPassword(form.Password, this.appctx.Config.Salt)
+	pwd, err := pkg.GetPassword(form.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +101,7 @@ func (this *Login) Login(form *memodel.LoginForm) (*memodel.LogRep, error) {
 		UserId:    po.ID,
 		IsSuper:   po.IsSuperAdmin,
 		LoginCode: logcode,
-		Kind:      jwtx.ACCESS,
+		Kind:      jwtx.REFRESH,
 		Role:      po.Role,
 	}.Gen()
 	if err != nil {
@@ -125,7 +125,7 @@ func (this *Login) Valid(form *memodel.LoginForm) (*adminmodel.AdminPo, error) {
 			return po, r.Error
 		}
 	}
-	pwd, err := pkg.GetPassword(form.Password, this.appctx.Config.Salt)
+	pwd, err := pkg.GetPassword(form.Password)
 	if err != nil {
 		return nil, err
 	}

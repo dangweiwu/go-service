@@ -16,6 +16,7 @@ func NoAuthErrResponse(c *gin.Context, err error) {
 // 权限中间件
 func CheckAuth(appctx *appctx.AppCtx) gin.HandlerFunc {
 	return func(context *gin.Context) {
+
 		yes, err := jwtx.GetIsSuper(context)
 		if err != nil {
 			NoAuthErrResponse(context, err)

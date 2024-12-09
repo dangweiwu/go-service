@@ -13,7 +13,7 @@ func GetAdminRedisLoginId(id int) string {
 // my info
 // @doc | memodel.MeInfo
 type MeInfo struct {
-	model.Model
+	//model.Model
 	Account      string `json:"account" gorm:"type:varchar(50);unique;comment:账号" binding:"required" doc:"|d 账号"`
 	Phone        string `json:"phone" gorm:"type:varchar(50);unique;comment:电话" binding:"max=11" doc:"|d 电话"`
 	Name         string `json:"name" gorm:"size:100;not null;default:'';comment:名称" binding:"max=100" doc:"|d 姓名"`
@@ -22,6 +22,8 @@ type MeInfo struct {
 	IsSuperAdmin string `json:"is_super_admin" gorm:"type:enum('1','0');default:'0';comment:是否超级管理员" binding:"oneof=0 1" doc:"|d 是否超级管理员 |c 0不是 1是"`
 	Role         string `json:"role" gorm:"size:100;not null;index;comment:角色" doc:"|d 角色ID"` //角色代码
 }
+
+var MeViewField = []string{"account", "phone", "name", "memo", "email", "is_super_admin", "role"}
 
 func (MeInfo) TableName() string {
 	return "admin"
@@ -56,12 +58,6 @@ type LogRep struct {
 	AccessToken  string `json:"access_token" doc:"|d 鉴权token |c header头Authorization参数"`
 	RefreshToken string `json:"refresh_token" doc:"|d 刷新token |c 刷新token时所用参数"`
 	TokenExp     int64  `json:"token_exp" doc:"|d 刷新时间戳 |c token有效期"`
-}
-
-// 刷新用token
-// @doc | memodel.RefreshTokeForm
-type RefreshTokeForm struct {
-	RefreshToken string `json:"refresh_token" binding:"required" doc:"|d 刷新token"`
 }
 
 // 修改密码

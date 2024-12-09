@@ -69,7 +69,7 @@ func (this *ResetPassword) ResetPassword(rawPo *adminmodel.AdminPo) (string, err
 	}
 
 	_pwd := this.newPwd()
-	pwd, err := pkg.GetPassword(_pwd, this.appctx.Config.Salt)
+	pwd, err := pkg.GetPassword(_pwd)
 	if err != nil {
 		return "", fmt.Errorf("生成密码异常:%w", err)
 	}

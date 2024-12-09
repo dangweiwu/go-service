@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/middler"
 	"go-service/internal/apiservice/pkg/ginx"
+	"go-service/internal/apiservice/pkg/jwtx"
 	"go-service/internal/bootstrap/appctx"
 )
 
@@ -28,16 +29,18 @@ func Do(actx *appctx.AppCtx, f HandlerFunc) func(c *gin.Context) {
 }
 
 type Router struct {
-	Root *gin.RouterGroup
-	Jwt  *gin.RouterGroup //jwt登陆
-	Auth *gin.RouterGroup //权限
+	Root        *gin.RouterGroup
+	Jwt         *gin.RouterGroup //jwt登陆
+	Auth        *gin.RouterGroup //权限
+	TokenReflsh *gin.RouterGroup //token刷新
 }
 
 func NewRouter(actx *appctx.AppCtx, g *gin.Engine) *Router {
 	return &Router{
 		Root: g.Group("/api"),
-		Jwt:  g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx)),
+		Jwt:  g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.ACCESS), middler.CheckLoginCode(actx)),
 		//Auth: g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx), middler.CheckAuth(actx)),
-		Auth: g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx)),
+		Auth:        g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.ACCESS), middler.CheckLoginCode(actx)),
+		TokenReflsh: g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.REFRESH)),
 	}
 }
