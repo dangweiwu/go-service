@@ -19,8 +19,8 @@ tasks:
     cmds:
       - docker-compose -p goservice -f ./deploy/dev/docker-compose.yaml up -d
   doc:
-    - go install github.com/dangweiwu/apidoc@v1.0.3
-    - apidoc run
+    - go install github.com/dangweiwu/apidoc@v1.0.6
+    - apidoc run -o ./doc/apidoc.md
   run:
     cmds:
       - go mod tidy

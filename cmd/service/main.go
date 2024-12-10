@@ -13,6 +13,8 @@ var (
 	BuildTS   = "None"
 )
 
+// @base| xx系统管理 | v0.0.1
+// @desc| 系统管理 2024年 12月 10日
 func main() {
 	option.Versionstr = Version
 	option.GitCommit = GitCommit

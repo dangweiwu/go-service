@@ -6,7 +6,7 @@ import (
 	"go-service/internal/bootstrap/appctx"
 )
 
-// @group | admin | 1 | 用户管理 | 系统用户管理 增删查改
+// @group | admin | 2 | 用户管理 | 系统用户管理 增删查改
 func Route(appctx *appctx.AppCtx, r *router.Router) {
 	r.Auth.POST("/admin", router.Do(appctx, api.NewAdminCreate))
 	r.Auth.GET("/admin", router.Do(appctx, api.NewAdminQuery))
