@@ -100,7 +100,9 @@ func (this *Query) Where(query []string) *Query {
 	}
 
 	if len(_q) != 0 {
-		this.Db = this.Db.Where(_q)
+		for k, v := range _q {
+			this.Db = this.Db.Where(k+" = ?", v)
+		}
 	}
 
 	return this

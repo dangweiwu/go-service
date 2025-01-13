@@ -44,6 +44,7 @@ func (this *AdminQuery) Do() error {
 }
 
 var likeRule = []string{"account", "phone", "email", "name"}
+var Rule = []string{"status"}
 
 func (this *AdminQuery) Query() (interface{}, error) {
 
@@ -53,6 +54,7 @@ func (this *AdminQuery) Query() (interface{}, error) {
 		SetTable(po).
 		Select(adminmodel.AdminViewField).
 		WhereLike(likeRule).
+		Where(Rule).
 		Order()
 	return q.PageFind(&pos)
 }

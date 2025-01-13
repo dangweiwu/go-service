@@ -42,9 +42,8 @@ func BaseBoot(ctx context.Context, cf context.CancelFunc, cfg config.Config) (*B
 		sctx.RpcLog = lg.NewBaseLog(_lg, "rpc")
 		sctx.RpcLog = lg.NewBaseLog(_lg, "ser")
 	}
-
 	if db, err := mysqlx.NewClient(cfg.Mysql); err != nil {
-		return nil, fmt.Errorf("new mysqlx error :%w", err)
+		return nil, fmt.Errorf("new mysqlx error :%v", err)
 	} else {
 		sctx.Db = db
 	}
