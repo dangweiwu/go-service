@@ -45,7 +45,7 @@ func (this *AuthQuery) Query() (interface{}, error) {
 	pos := []authmodel.AuthVo{}
 
 	q := query.NewQuery(this.appctx.Db, this.Ginx).SetTable(po)
-	qa, _ := this.ctx.GetQuery("name")
+	qa, _ := this.ctx.GetQuery("key")
 
 	q.Db = q.Db.Where("parent_id=0").Preload("Children", func(db *gorm.DB) *gorm.DB {
 		db = db.Order("order_num")
@@ -61,7 +61,7 @@ func (this *AuthQuery) Query() (interface{}, error) {
 func voloop(a []authmodel.AuthVo, sub string) []authmodel.AuthVo {
 	var result []authmodel.AuthVo
 	for _, v := range a {
-		if strings.Contains(v.Name, sub) {
+		if strings.Contains(v.Name, sub) || strings.Contains(v.Code, sub) || strings.Contains(v.Api, sub) {
 			v.Children = voloop(v.Children, sub)
 			result = append(result, v)
 		} else {

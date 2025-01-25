@@ -14,6 +14,7 @@ type AuthPo struct {
 	Kind     string   `json:"kind" gorm:"type:enum('1','0');default:'0';comment:0 api 1 菜单" binding:"oneof=0 1"` //0 api 1 菜单
 	ParentId int      `json:"parent_id" gorm:"default:0;not null;comment:上级菜单ID"`
 	Children []AuthPo `json:"children" gorm:"foreignkey:ParentId"`
+	Memo     string   `json:"memo" gorm:"type:text;comment:备注" binding:"max=300" doc:"|d 备注"`
 }
 
 func (AuthPo) TableName() string {
@@ -30,6 +31,7 @@ type AuthForm struct {
 	Method   string `json:"method" gorm:"size:10;default:'';comment:请求方式" binding:"max=50"  doc:"|d 方法 |e GET"`                           // GET POST PUT DELETE
 	Kind     string `json:"kind" gorm:"type:enum('1','0');default:'0';comment:0 api 1 菜单" binding:"oneof=0 1"  doc:"|d 类型 |c 0:api 1:菜单"` //0 api 1 菜单
 	ParentId int    `json:"parent_id" gorm:"default:0;not null;comment:上级菜单ID"  doc:"|d 上级ID"`                                            //父类ID
+	Memo     string `json:"memo" gorm:"type:text;comment:备注" binding:"max=300" doc:"|d 备注"`
 }
 
 func (AuthForm) TableName() string {
@@ -38,13 +40,14 @@ func (AuthForm) TableName() string {
 
 // @doc| authmodel.AuthUpdateForm
 type AuthUpdateForm struct {
-	model.Model
+	ID       int64  `json:"id" gorm:"primaryKey"`
 	Name     string `json:"name" gorm:"size:100;comment:名称" binding:"max=100,required" doc:"|d 权限名称"`
 	OrderNum int    `json:"order_num" gorm:"default:0;comment:排序" binding:""  doc:"|d 排序"`
 	Api      string `json:"api" gorm:"size:200;default:'';comment:接口" binding:"max=200" doc:"|d API"`
 	Method   string `json:"method" gorm:"size:10;default:'';comment:请求方式" binding:"max=50"  doc:"|d 方法 |e GET"`                           // GET POST PUT DELETE
 	Kind     string `json:"kind" gorm:"type:enum('1','0');default:'0';comment:0 api 1 菜单" binding:"oneof=0 1"  doc:"|d 类型 |c 0:api 1:菜单"` //0 api 1 菜单
 	ParentId int    `json:"parent_id" gorm:"default:0;not null;comment:上级菜单ID"  doc:"|d 上级ID"`                                            //父类ID
+	Memo     string `json:"memo" gorm:"type:text;comment:备注" binding:"max=300" doc:"|d 备注"`
 }
 
 func (AuthUpdateForm) TableName() string {
@@ -62,6 +65,7 @@ type AuthVo struct {
 	Kind     string   `json:"kind" gorm:"type:enum('1','0');default:'0';comment:0 api 1 菜单" binding:"oneof=0 1"  doc:"|d 类型 |c 0:api 1:菜单"` //0 api 1 菜单
 	ParentId int      `json:"parent_id" gorm:"default:0;not null;comment:上级菜单ID"  doc:"|d 上级ID"`
 	Children []AuthVo `json:"children" gorm:"foreignkey:ParentId" doc:"|d 子集 |t []self "`
+	Memo     string   `json:"memo" gorm:"type:text;comment:备注" binding:"max=300" doc:"|d 备注"`
 }
 
 func (AuthVo) TableName() string {

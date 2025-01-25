@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app/admin/me/memodel"
+	"go-service/internal/apiservice/app/admin/role/rolemodel"
 	"go-service/internal/apiservice/pkg/ginx"
 	"go-service/internal/apiservice/pkg/jwtx"
 	"go-service/internal/apiservice/router"
@@ -42,6 +43,20 @@ func (this *MeInfo) Do() error {
 			return r.Error
 		}
 	}
-	this.Rep(po)
+	role := &rolemodel.RolePo{}
+	if po.IsSuperAdmin != "1" {
+		this.appctx.Db.Model(role).Select("code").Where("id = ?", po.Role).Take(role)
+	}
+
+	vo := &memodel.MeInfoVo{}
+	vo.Name = po.Name
+	vo.Account = po.Account
+	vo.Role = po.Role
+	vo.RoleName = role.Name
+	vo.Phone = po.Phone
+	vo.IsSuperAdmin = po.IsSuperAdmin
+	vo.Email = po.Email
+
+	this.Rep(vo)
 	return nil
 }

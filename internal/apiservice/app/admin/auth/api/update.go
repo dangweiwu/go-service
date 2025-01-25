@@ -61,7 +61,7 @@ func (this *AuthUpdate) Update(po *authmodel.AuthUpdateForm) error {
 		}
 	}
 	//更新
-	if r := db.Updates(po); r.Error != nil {
+	if r := db.Save(po); r.Error != nil {
 		return r.Error
 	}
 	return nil

@@ -13,5 +13,5 @@ tasks:
   lint:
 
     cmds:
-#      - golangci-lint cache clean
+      - golangci-lint cache clean
       - golangci-lint run
