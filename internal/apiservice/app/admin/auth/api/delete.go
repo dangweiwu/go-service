@@ -24,10 +24,10 @@ func NewAuthDel(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @api | auth | 4 | 删除权限
 // @path | /api/auth/:id
 // @method | DELETE
-// @header 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
+// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
 // @tbtitle  | 200 Response
 // @tbrow    |n data |e ok |c 成功 |t type
-// @response | ginx.ErrResponse | 500 RESPONSE
+// @responses | ginx.ErrResponse | 500 RESPONSE
 // @tbtitle  | msg 数据
 // @tbrow    |n msg |e 该权限下包含其他权限，禁止删除！
 // @tbrow    |n msg |e 记录不存在

@@ -16,17 +16,17 @@ type LogOut struct {
 	appctx *appctx.AppCtx
 }
 
+// NewLogOut 退出
+// @tags 1-系统-我的
+// @summary 退出系统
+// @Description	安全退出系统
+// @router /api/logout [post]
+// @Security		ApiKeyAuth
+// @success 200 {object} ginx.Response{data=string} "data=ok"
 func NewLogOut(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &LogOut{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | me | 2 | 登出
-// @path 	| /api/logout
-// @method 	| POST
-// @header  |n Authorization |d token |t string |c 鉴权
-// @tbtitle | 200 Response
-// @tbrow   |n data |e ok |c 成功 |t string
 func (this *LogOut) Do() error {
 	err := this.Logout()
 	if err != nil {

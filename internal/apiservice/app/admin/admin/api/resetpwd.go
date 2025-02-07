@@ -22,18 +22,19 @@ type ResetPassword struct {
 	appctx *appctx.AppCtx
 }
 
+// NewResetPassword doc
+// @tags 2-系统-用户管理
+// @summary 修改密码
+// @Description 生成数字与字母组合的随机6位密码，需要自己保存。生成密码后对应账号下线。不能重置自己密码
+// @Security		ApiKeyAuth
+// @router /api/admin/resetpwd/{id} [put]
+// @Param id path int true "用户ID"
+// @success 200  {object} ginx.Response{data=string} "data=新密码"
+// @failure 400 {object} ginx.ErrResponse "msg=不能重置自己密码"
 func NewResetPassword(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &ResetPassword{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| admin | 3 | 重置密码
-// @path 	| /api/admin/resetpwd/:id
-// @method 	| PUT
-// @urlparam |n id |d 用户ID |v required |t int    |e 1
-// @header   |n Authorization |d token  |t string |c 鉴权
-// @tbtitle  | 200 Response
-// @tbrow    |n data |d 新密码 |c 数字与字母组合的随机6位密码 |t string
 func (this *ResetPassword) Do() error {
 	var err error
 	id, err := this.GetId()

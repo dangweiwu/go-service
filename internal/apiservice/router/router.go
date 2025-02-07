@@ -37,9 +37,8 @@ type Router struct {
 
 func NewRouter(actx *appctx.AppCtx, g *gin.Engine) *Router {
 	return &Router{
-		Root: g.Group("/api"),
-		Jwt:  g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.ACCESS), middler.CheckLoginCode(actx)),
-		//Auth: g.Group("/api", middler.TokenParse(actx), middler.CheckLoginCode(actx), middler.CheckAuth(actx)),
+		Root:        g.Group("/api"),
+		Jwt:         g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.ACCESS), middler.CheckLoginCode(actx)),
 		Auth:        g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.ACCESS), middler.CheckLoginCode(actx), middler.CheckAuth(actx)),
 		TokenReflsh: g.Group("/api", middler.TokenParse(actx), middler.CheckTokenKind(actx, jwtx.REFRESH)),
 	}

@@ -9,7 +9,6 @@ import (
 	"go-service/internal/apiservice/pkg/jwtx"
 	"go-service/internal/apiservice/router"
 	"go-service/internal/bootstrap/appctx"
-	"log"
 	"time"
 )
 
@@ -19,26 +18,22 @@ type RefreshToken struct {
 	appctx *appctx.AppCtx
 }
 
+// NewRefreshToken 刷新token
+// @tags 1-系统-我的
+// @summary TOKEN刷新
+// @description	通过reflesh token获取access token,
+// @description	reflesh token有效期是access token的3倍时长,
+// @description	access token到期前进行续期。
+// @router /api/token/refresh [post]
+// @param Authorization header string true "reflesh_token"
+// @success 200 {object} memodel.LogRep "与登录获取数据一致"
+// @failure 400 {object} ginx.ErrResponse "msg=账号已禁用"
 func NewRefreshToken(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RefreshToken{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | me | 6 | 刷新token
-// @path 	| /api/token/refresh
-// @method 	| POST
-// @header   |n Authorization |d token  |t string |c 鉴权
-// @response | memodel.LogRep |200 Response
-// @response | ginx.ErrResponse | 401 Response
-// @tbtitle | Msg 数据
-// @tbrow   |n msg |d refreshtoken已失效
 func (this *RefreshToken) Do() error {
 
-	//form := &mymodel.RefreshTokeForm{}
-	//if err := this.Bind(form); err != nil {
-	//	return err
-	//}
-	log.Println("refresh")
 	uid, err := jwtx.GetUserid(this.ctx)
 	if err != nil {
 		return err

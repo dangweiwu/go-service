@@ -19,6 +19,8 @@ var routes = []func(actx *appctx.AppCtx, r *router.Router){
 	role.Route,
 }
 
+// InitRouter 初始化路由
+
 func InitRouter(actx *appctx.AppCtx, g *gin.Engine) {
 	r := router.NewRouter(actx, g)
 	for _, f := range routes {

@@ -19,22 +19,19 @@ type AdminDel struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAdminDel doc
+// @tags 2-系统-用户管理
+// @summary 删除用户
+// @Description 禁止删除自己。
+// @Security		ApiKeyAuth
+// @router /api/admin/{id} [delete]
+// @param id path int true "用户ID"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=禁止删除自己"
 func NewAdminDel(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AdminDel{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api | admin | 5 | 删除用户
-// @path | /api/admin/:id
-// @method | DELETE
-// @header 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
-// @urlparam |n id |d 用户ID |v required |t int    |e 1
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t type
-// @response | ginx.ErrResponse | 500 RESPONSE
-// @tbtitle  | msg 数据
-// @tbrow    |n msg |e 禁止删除自己
-// @tbrow    |n msg |e 记录不存在
 func (this *AdminDel) Do() error {
 	var err error
 	id, err := this.GetId()

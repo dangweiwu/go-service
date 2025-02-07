@@ -26,9 +26,9 @@ func NewRoleInfo(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @api    | role | 3 | 角色详情
 // @path   | /api/role/:code
 // @method | GET
-// @header |n Authorization |d token |t string |c 鉴权
+// @headers |n Authorization |d token |t string |c 鉴权
 // @url    |n code |d 角色代码 |t string |c 角色代码
-// @response | rolemodel.RolePo | 200 Response
+// @responses | rolemodel.RolePo | 200 Response
 func (this *RoleInfo) Do() error {
 	code, err := this.GetUrlkey("code")
 	if err != nil {

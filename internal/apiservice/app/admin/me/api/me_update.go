@@ -18,18 +18,19 @@ type MeUpdate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewMeUpdate 修改我的信息
+// @tags 1-系统-我的
+// @summary 修改个人信息
+// @Description	修改个人信息
+// @router /api/me [put]
+// @Security		ApiKeyAuth
+// @param body body memodel.MeForm true "修改个人信息"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse ""
 func NewMeUpdate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &MeUpdate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | me | 4 | 修改我的信息
-// @path 	| /api/me
-// @method 	| PUT
-// @header   |n Authorization |d token  |t string |c 鉴权
-// @form     | memodel.MeForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *MeUpdate) Do() error {
 	var err error
 	uid, err := jwtx.GetUserid(this.ctx)
@@ -45,9 +46,9 @@ func (this *MeUpdate) Do() error {
 	}
 	po.ID = uid
 
-	if err := this.valid(po); err != nil {
-		return err
-	}
+	//if err := this.valid(po); err != nil {
+	//	return err
+	//}
 
 	err = this.Update(po)
 	if err != nil {

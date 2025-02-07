@@ -24,7 +24,7 @@ func NewSetAuth(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @path 	| /api/role/auth/:id
 // @method 	| PUT
 // @urlparam |n id |d 角色ID   |v required |t int    |e 1
-// @header   |n Authorization |d token  |t string |c 鉴权
+// @headers   |n Authorization |d token  |t string |c 鉴权
 // @form     | rolemodel.RoleAuthForm
 // @tbtitle  | 200 Response
 // @tbrow    |n data |e ok |c 成功 |t string

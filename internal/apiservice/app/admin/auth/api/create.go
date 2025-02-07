@@ -23,7 +23,7 @@ func NewAuthCreate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @api | auth | 1 | 创建权限
 // @path    | /api/auth
 // @method  | POST
-// @header  |n Authorization |d token |t string |c 鉴权
+// @headers  |n Authorization |d token |t string |c 鉴权
 // @form    | authmodel.AuthForm
 // @tbtitle  | 200 Response
 // @tbrow    |n data |e ok |c 成功 |t string

@@ -19,19 +19,20 @@ type AdminUpdate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAdminUpdate doc
+// @tags 2-系统-用户管理
+// @summary 修改用户
+// @Description status修改为0会导致对应账号下线，禁止修改自己。
+// @Security		ApiKeyAuth
+// @router /api/admin/{id} [put]
+// @param id path int true "用户ID"
+// @param body body adminmodel.AdminUpdateForm true "用户信息"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=禁止修改自己"
 func NewAdminUpdate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AdminUpdate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| admin | 2 | 修改用户
-// @path 	| /api/admin/:id
-// @method 	| PUT
-// @urlparam |n id |d 用户ID |v required |t int    |e 1
-// @header   |n Authorization |d token  |t string |c 鉴权
-// @form     | adminmodel.AdminUpdateForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *AdminUpdate) Do() error {
 	var err error
 	id, err := this.GetId()

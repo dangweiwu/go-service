@@ -25,10 +25,10 @@ func NewAuthQuery(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @api 	| auth | 3 | 权限查询
 // @path 	| /api/auth
 // @method 	| GET
-// @header 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
+// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
 // @query 	|n name |d 名称 |e 0 |t string |c 权限名称
-// @response | ginx.Response | 200 Response
-// @response | authmodel.AuthVo | Data定义
+// @responses | ginx.Response | 200 Response
+// @responses | authmodel.AuthVo | Data定义
 func (this *AuthQuery) Do() error {
 
 	data, err := this.Query()

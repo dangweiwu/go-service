@@ -25,7 +25,7 @@ func NewAllUrl(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 // @api 	| auth | 5 | 获取所有URL | 创建修改权限时url参数从这获取
 // @path 	| /api/allurl
 // @method 	| GET
-// @header 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
+// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
 // @tbtitle | 200 Response
 // @tbrow |n data |d 权限列表 |t []string |c 列表数据 |e ['/api/admin']
 func (this *AllUrl) Do() error {

@@ -19,18 +19,19 @@ type UpdatePwd struct {
 	appctx *appctx.AppCtx
 }
 
+// NewMeUpdatePwd 修改我的密码
+// @tags 1-系统-我的
+// @summary 修改个人密码
+// @Description	修改个人密码，修改完后token则会失效，需要进行重新登录。
+// @router /api/me/password [put]
+// @Security		ApiKeyAuth
+// @param body body memodel.PasswordForm true "修改个人密码"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=原密码错误"
 func NewMeUpdatePwd(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &UpdatePwd{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | me | 5 | 修改密码
-// @path 	| /api/me/password
-// @method 	| PUT
-// @header   |n Authorization |d token  |t string |c 鉴权
-// @form     | memodel.PasswordForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *UpdatePwd) Do() error {
 	var err error
 	uid, err := jwtx.GetUserid(this.ctx)

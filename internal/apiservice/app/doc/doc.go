@@ -25,12 +25,12 @@ var tpl = `
 <rapi-doc
         spec-url = "/doc/swag.yaml?a={{.Notice}}"
         style = "height:100vh; width:100%"
-        font-size="large"
+        font-size="largest"
         show-method-in-nav-bar="as-colored-text"
         render-style="focused"
         show-header="false"
         persist-auth="true"
-        sort-tags	="true"
+        sort-tags="true"
 >
 </rapi-doc>
 </body>

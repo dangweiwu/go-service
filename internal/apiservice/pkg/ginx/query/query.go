@@ -50,8 +50,8 @@ const (
 
 // @doc | query.QueryResult
 type QueryPageResult struct {
-	Page *Page       `json:"page" doc:"|d 分页数据 |c 参考Page定义"`
-	Data interface{} `json:"data" doc:"|d 数据 |c 参考Data定义"`
+	Page *Page       `json:"page" ` //分页数据
+	Data interface{} `json:"data"`  //数据
 }
 
 type QueryListResult struct {

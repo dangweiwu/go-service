@@ -24,9 +24,9 @@ type Login struct {
 	appctx *appctx.AppCtx
 }
 
-// NewLogin
+// NewLogin 登录系统
 // @tags 1-系统-我的
-// @summary 登录
+// @summary 登录系统
 // @Description	用户登录
 // @router /api/login [post]
 // @param body body memodel.LoginForm true "登录"

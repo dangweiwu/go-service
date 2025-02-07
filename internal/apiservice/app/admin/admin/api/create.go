@@ -17,18 +17,18 @@ type AdminCreate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAdminCreate doc
+// @tags 2-系统-用户管理
+// @summary 创建用户
+// @router /api/admin [post]
+// @Security		ApiKeyAuth
+// @param body body adminmodel.AdminForm true "用户信息"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=账号已存在"
 func NewAdminCreate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AdminCreate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | admin | 1 |创建用户
-// @path    | /api/admin
-// @method  | POST
-// @header  |n Authorization |d token |t string |c 鉴权
-// @form    | adminmodel.AdminForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *AdminCreate) Do() error {
 
 	//数据源
