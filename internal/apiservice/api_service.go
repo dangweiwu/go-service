@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app"
+	"go-service/internal/apiservice/app/doc"
 	"go-service/internal/apiservice/middler"
 	"go-service/internal/apiservice/pkg"
 	"go-service/internal/bootstrap/appctx"
@@ -25,6 +26,10 @@ func Start(appctx *appctx.AppCtx) (err error) {
 
 	//设置静态文件
 	engine.Static("/view", appctx.Config.Api.ViewDir)
+
+	//文档
+	doc.InitDoc(appctx, engine)
+
 	//重定向到主页面
 	engine.GET("/", func(c *gin.Context) {
 		c.Request.URL.Path = "/view"

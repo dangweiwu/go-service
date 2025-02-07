@@ -24,21 +24,18 @@ type Login struct {
 	appctx *appctx.AppCtx
 }
 
+// NewLogin
+// @tags 1-系统-我的
+// @summary 登录
+// @Description	用户登录
+// @router /api/login [post]
+// @param body body memodel.LoginForm true "登录"
+// @success 200 {object} memodel.LogRep
+// @failure 400 {object} ginx.ErrResponse "msg=密码错误|账号不存在|账号被禁用"
 func NewLogin(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &Login{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api     | me | 1 | 登录
-// @path 	| /api/login
-// @method 	| POST
-// @form     | memodel.LoginForm
-// @response | memodel.LogRep |200 Response
-// @response | ginx.ErrResponse | 400 Response
-// @tbtitle | Msg 数据
-// @tbrow   |n msg |d 密码错误
-// @tbrow   |n msg |d 账号不存在
-// @tbrow   |n msg |d 账号被禁用
 func (this *Login) Do() error {
 
 	//数据源

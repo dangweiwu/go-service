@@ -41,4 +41,7 @@ tasks:
     cmds:
       - task: common:lint
       - go run ./cmd/service/main.go -f ./config/config.yaml inituser -p a123456
+  swagInit:
+    cmds:
+      - swag init -g ./cmd/service/main.go  --md ./doc -g ./cmd/service/main.go  -o ./doc
 

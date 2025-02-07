@@ -18,16 +18,17 @@ type MeInfo struct {
 	appctx *appctx.AppCtx
 }
 
+// NewMeInfo
+// @tags 1-系统-我的
+// @summary 我的详情
+// @Description	获取我的详情
+// @router /api/me [get]
+// @Security		ApiKeyAuth
+// @success 200 {object} memodel.MeInfo "个人信息详情"
 func NewMeInfo(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &MeInfo{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api | me | 3 | 我的详情
-// @path | /api/me
-// @method | GET
-// @header |n Authorization |d token |t string |c 鉴权
-// @response | memodel.MeInfo | 200 Response
 func (this *MeInfo) Do() error {
 
 	uid, err := jwtx.GetUserid(this.ctx)

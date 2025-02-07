@@ -13,8 +13,24 @@ var (
 	BuildTS   = "None"
 )
 
-// @base| xx系统管理 | v0.0.1
-// @desc| 系统管理 2024年 12月 10日
+// @title           管理系统
+// @version         1.0.0
+// @description     通用框架
+// @description.markdown api.md
+
+// @schemes http
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
+// @tag.name  1-系统-我的
+// @tag.description 登录、退出、token刷新、我的详情、信息修改、密码修改。
+// @tag.name  2-系统-用户管理
+// @tag.description 用户添加、修改、删除、重置密码、角色配置。
+// @tag.name  3-系统-权限管理
+// @tag.description 权限添加、修改、删除。正式发版前，此页面删除。
+// @tag.name  4-系统-角色管理
+// @tag.description 角色添加、修改、删除、权限配置。
 func main() {
 	option.Versionstr = Version
 	option.GitCommit = GitCommit
@@ -36,5 +52,4 @@ func main() {
 			os.Exit(1)
 		}
 	}
-
 }
