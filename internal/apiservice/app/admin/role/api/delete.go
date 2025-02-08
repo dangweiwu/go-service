@@ -14,20 +14,17 @@ type RoleDel struct {
 	appctx *appctx.AppCtx
 }
 
+// NewRoleDel doc
+// @tags 4-系统-角色管理
+// @summary 删除角色
+// @Security		ApiKeyAuth
+// @router /api/role/{id} [delete]
+// @param id path int true "用户ID"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
 func NewRoleDel(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RoleDel{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| admin | 2 | 删除角色
-// @path 	| /api/role/:id
-// @method 	| DELETE
-// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t type
-// @responses | ginx.ErrResponse | 500 RESPONSE
-// @tbtitle  | msg 数据
-// @tbrow    |n msg |e 记录不存在
 func (this *RoleDel) Do() error {
 	var err error
 	id, err := this.GetId()

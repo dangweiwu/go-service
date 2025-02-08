@@ -21,7 +21,7 @@ type AdminCreate struct {
 // @tags 2-系统-用户管理
 // @summary 创建用户
 // @router /api/admin [post]
-// @Security		ApiKeyAuth
+// @security		ApiKeyAuth
 // @param body body adminmodel.AdminForm true "用户信息"
 // @success 200 {object} ginx.Response{data=string} "data=ok"
 // @failure 400 {object} ginx.ErrResponse "msg=账号已存在"

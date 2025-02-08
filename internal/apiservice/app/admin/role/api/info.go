@@ -14,6 +14,13 @@ type RoleInfo struct {
 	ctx    *gin.Context
 }
 
+// NewRoleInfo doc
+// @tags 4-系统-角色管理
+// @summary 角色详情
+// @security		ApiKeyAuth
+// @router /api/role/{code} [get]
+// @param code path string true "角色编码"
+// @success 200 {object} rolemodel.RolePo "角色详情"
 func NewRoleInfo(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RoleInfo{
 		Ginx:   *ginx.New(c),
@@ -22,13 +29,6 @@ func NewRoleInfo(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	}
 }
 
-// Do
-// @api    | role | 3 | 角色详情
-// @path   | /api/role/:code
-// @method | GET
-// @headers |n Authorization |d token |t string |c 鉴权
-// @url    |n code |d 角色代码 |t string |c 角色代码
-// @responses | rolemodel.RolePo | 200 Response
 func (this *RoleInfo) Do() error {
 	code, err := this.GetUrlkey("code")
 	if err != nil {

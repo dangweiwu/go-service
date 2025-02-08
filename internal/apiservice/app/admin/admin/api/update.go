@@ -22,8 +22,8 @@ type AdminUpdate struct {
 // NewAdminUpdate doc
 // @tags 2-系统-用户管理
 // @summary 修改用户
-// @Description status修改为0会导致对应账号下线，禁止修改自己。
-// @Security		ApiKeyAuth
+// @description status修改为0会导致对应账号下线，禁止修改自己。
+// @security		ApiKeyAuth
 // @router /api/admin/{id} [put]
 // @param id path int true "用户ID"
 // @param body body adminmodel.AdminUpdateForm true "用户信息"

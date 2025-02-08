@@ -15,19 +15,18 @@ type SetAuth struct {
 	appctx *appctx.AppCtx
 }
 
+// NewSetAuth doc
+// @tags 4-系统-角色管理
+// @summary 设置auth列表
+// @security		ApiKeyAuth
+// @router /api/role/auth/{id} [put]
+// @param id path int true "角色ID"
+// @param body body rolemodel.RoleAuthForm true " "
+// @success 200 {object} ginx.Response{data=string} "data=ok"
 func NewSetAuth(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &SetAuth{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| role | 5 | 设定角色权限
-// @path 	| /api/role/auth/:id
-// @method 	| PUT
-// @urlparam |n id |d 角色ID   |v required |t int    |e 1
-// @headers   |n Authorization |d token  |t string |c 鉴权
-// @form     | rolemodel.RoleAuthForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *SetAuth) Do() error {
 	var err error
 	id, err := this.GetId()

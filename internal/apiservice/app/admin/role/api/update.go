@@ -15,19 +15,18 @@ type RoleUpdate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewRoleUpdate doc
+// @tags 4-系统-角色管理
+// @summary 修改角色
+// @security		ApiKeyAuth
+// @router /api/role/{id} [put]
+// @param id path int true "角色ID"
+// @param body body rolemodel.RoleUpdate true " "
+// @success 200 {object} ginx.Response{data=string} "data=ok"
 func NewRoleUpdate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RoleUpdate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| role | 6 | 修改角色
-// @path 	| /api/role/:id
-// @method 	| PUT
-// @urlparam |n id |d 角色ID   |v required |t int    |e 1
-// @headers   |n Authorization |d token  |t string |c 鉴权
-// @form     | rolemodel.RoleUpdate
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *RoleUpdate) Do() error {
 	var err error
 	id, err := this.GetId()

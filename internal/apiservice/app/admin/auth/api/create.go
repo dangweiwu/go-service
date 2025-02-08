@@ -15,18 +15,18 @@ type AuthCreate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAuthCreate doc
+// @tags 3-系统-权限管理
+// @summary 创建权限
+// @router /api/auth [post]
+// @Security		ApiKeyAuth
+// @param body body authmodel.AuthForm true "权限"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse ""
 func NewAuthCreate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AuthCreate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api | auth | 1 | 创建权限
-// @path    | /api/auth
-// @method  | POST
-// @headers  |n Authorization |d token |t string |c 鉴权
-// @form    | authmodel.AuthForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *AuthCreate) Do() error {
 	//数据源
 	po := &authmodel.AuthForm{}

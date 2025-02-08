@@ -16,21 +16,19 @@ type AuthDel struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAuthDel doc
+// @tags 3-系统-权限管理
+// @summary 删除权限
+// @security		ApiKeyAuth
+// @description 该权限下包含其他权限，禁止删除！
+// @router /api/auth/{id} [delete]
+// @param id path int true "角色ID"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=该权限下包含其他权限，禁止删除！"
 func NewAuthDel(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AuthDel{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api | auth | 4 | 删除权限
-// @path | /api/auth/:id
-// @method | DELETE
-// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t type
-// @responses | ginx.ErrResponse | 500 RESPONSE
-// @tbtitle  | msg 数据
-// @tbrow    |n msg |e 该权限下包含其他权限，禁止删除！
-// @tbrow    |n msg |e 记录不存在
 func (this *AuthDel) Do() error {
 	var err error
 	id, err := this.GetId()

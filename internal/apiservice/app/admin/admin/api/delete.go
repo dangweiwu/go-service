@@ -22,8 +22,8 @@ type AdminDel struct {
 // NewAdminDel doc
 // @tags 2-系统-用户管理
 // @summary 删除用户
-// @Description 禁止删除自己。
-// @Security		ApiKeyAuth
+// @description 禁止删除自己。
+// @security		ApiKeyAuth
 // @router /api/admin/{id} [delete]
 // @param id path int true "用户ID"
 // @success 200 {object} ginx.Response{data=string} "data=ok"

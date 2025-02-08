@@ -17,18 +17,17 @@ type AuthQuery struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAuthQuery doc
+// @tags 3-系统-权限管理
+// @summary 查询权限
+// @Security		ApiKeyAuth
+// @router /api/auth [get]
+// @param key query string false "关键字，可以是name或者code，进行模糊匹配。"
+// @success 200 {object} ginx.Response{data=[]authmodel.AuthVo}  "权限树列表，所有的权限数据"
 func NewAuthQuery(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AuthQuery{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| auth | 3 | 权限查询
-// @path 	| /api/auth
-// @method 	| GET
-// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
-// @query 	|n name |d 名称 |e 0 |t string |c 权限名称
-// @responses | ginx.Response | 200 Response
-// @responses | authmodel.AuthVo | Data定义
 func (this *AuthQuery) Do() error {
 
 	data, err := this.Query()
@@ -85,5 +84,4 @@ func voloop(a []authmodel.AuthVo, sub string) []authmodel.AuthVo {
 
 	}
 	return result
-
 }

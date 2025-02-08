@@ -25,7 +25,7 @@ type ResetPassword struct {
 // NewResetPassword doc
 // @tags 2-系统-用户管理
 // @summary 修改密码
-// @Description 生成数字与字母组合的随机6位密码，需要自己保存。生成密码后对应账号下线。不能重置自己密码
+// @description 生成数字与字母组合的随机6位密码，需要自己保存。生成密码后对应账号下线。不能重置自己密码
 // @Security		ApiKeyAuth
 // @router /api/admin/resetpwd/{id} [put]
 // @Param id path int true "用户ID"

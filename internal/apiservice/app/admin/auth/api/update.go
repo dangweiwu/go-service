@@ -16,19 +16,19 @@ type AuthUpdate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewAuthUpdate doc
+// @tags 3-系统-权限管理
+// @summary 修改权限
+// @Security		ApiKeyAuth
+// @router /api/auth/{id} [put]
+// @param id path int true "权限ID"
+// @param body body authmodel.AuthUpdateForm true "用户信息"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse ""
 func NewAuthUpdate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &AuthUpdate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api 	| auth | 2 | 修改权限
-// @path 	| /api/auth/:id
-// @method 	| PUT
-// @urlparam |n id |d 权限ID   |v required |t int    |e 1
-// @headers   |n Authorization |d token  |t string |c 鉴权
-// @form     | authmodel.AuthUpdateForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *AuthUpdate) Do() error {
 	var err error
 	id, err := this.GetId()

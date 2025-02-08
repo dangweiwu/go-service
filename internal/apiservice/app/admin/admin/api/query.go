@@ -18,7 +18,7 @@ type AdminQuery struct {
 // NewAdminQuery doc
 // @tags 2-系统-用户管理
 // @summary 查询用户
-// @Security		ApiKeyAuth
+// @security		ApiKeyAuth
 // @router /api/admin [get]
 // @param limit query int false "条数 默认10"
 // @param current query int false "当前页码 默认1"

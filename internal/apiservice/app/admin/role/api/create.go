@@ -15,18 +15,18 @@ type RoleCreate struct {
 	appctx *appctx.AppCtx
 }
 
+// NewRoleCreate doc
+// @tags 4-系统-角色管理
+// @summary 创建角色
+// @router /api/role [post]
+// @security		ApiKeyAuth
+// @param body body rolemodel.RoleForm true "用户信息"
+// @success 200 {object} ginx.Response{data=string} "data=ok"
+// @failure 400 {object} ginx.ErrResponse "msg=账号已存在"
 func NewRoleCreate(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RoleCreate{ginx.New(c), c, appctx}
 }
 
-// Do
-// @api | role | 1 | 创建角色
-// @path    | /api/role
-// @method  | POST
-// @headers  |n Authorization |d token |t string |c 鉴权
-// @form    | rolemodel.RoleForm
-// @tbtitle  | 200 Response
-// @tbrow    |n data |e ok |c 成功 |t string
 func (this *RoleCreate) Do() error {
 	//数据源
 	po := &rolemodel.RoleForm{}

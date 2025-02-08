@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app/admin/me/memodel"
 	"go-service/internal/apiservice/pkg/ginx"
@@ -77,23 +76,23 @@ func (this *MeUpdate) Update(rawpo *memodel.MeForm) error {
 
 }
 
-func (this *MeUpdate) valid(po *memodel.MeForm) error {
-	var ct = int64(0)
-
-	if po.Phone != "" {
-		if r := this.appctx.Db.Model(po).Where("id != ? and phone = ?", po.ID, po.Phone).Count(&ct); r.Error != nil {
-			return fmt.Errorf("校验失败:%w", r.Error)
-		} else if ct != 0 {
-			return errors.New("手机号已存在")
-		}
-	}
-
-	if po.Email != "" {
-		if r := this.appctx.Db.Model(po).Where("id!=? and email = ?", po.ID, po.Email).Count(&ct); r.Error != nil {
-			return fmt.Errorf("校验失败:%w", r.Error)
-		} else if ct != 0 {
-			return errors.New("Email已存在")
-		}
-	}
-	return nil
-}
+//func (this *MeUpdate) valid(po *memodel.MeForm) error {
+//	var ct = int64(0)
+//
+//	if po.Phone != "" {
+//		if r := this.appctx.Db.Model(po).Where("id != ? and phone = ?", po.ID, po.Phone).Count(&ct); r.Error != nil {
+//			return fmt.Errorf("校验失败:%w", r.Error)
+//		} else if ct != 0 {
+//			return errors.New("手机号已存在")
+//		}
+//	}
+//
+//	if po.Email != "" {
+//		if r := this.appctx.Db.Model(po).Where("id!=? and email = ?", po.ID, po.Email).Count(&ct); r.Error != nil {
+//			return fmt.Errorf("校验失败:%w", r.Error)
+//		} else if ct != 0 {
+//			return errors.New("Email已存在")
+//		}
+//	}
+//	return nil
+//}

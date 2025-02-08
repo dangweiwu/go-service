@@ -15,24 +15,22 @@ type RoleQuery struct {
 	appctx *appctx.AppCtx
 }
 
+// NewRoleQuery doc
+// @tags 4-系统-角色管理
+// @summary 角色查询
+// @Security		ApiKeyAuth
+// @router /api/role [get]
+// @param limit query int false "条数 默认10"
+// @param current query int false "当前页码 默认1"
+// @param code query string false "编码 模糊查询"
+// @param name query string false "名称 模糊查询"
+// @success 200 {object} query.QueryPageResult{data=[]rolemodel.RolePo}  "数据"
 func NewRoleQuery(appctx *appctx.AppCtx, c *gin.Context) router.Handler {
 	return &RoleQuery{ginx.New(c), c, appctx}
 }
 
 var likeRule = []string{"code", "name"}
 
-// Do
-// @api 	| role | 4 | 角色查询
-// @path 	| /api/role
-// @method 	| GET
-// @headers 	|n Authorization |d token |e tokenstring |c 鉴权 |t string
-// @query   |n limit   |d 条数 |e 10 |t int
-// @query   |n current |d 页码 |e 1  |t int
-// @query 	|n code |d 角色编码 |t string
-// @query   |n name |d 角色名称 |t string
-// @responses | query.QueryResult | 200 Response
-// @responses | query.Page | Page定义
-// @responses | rolemodel.RolePo | []Data 定义
 func (this *RoleQuery) Do() error {
 
 	q := query.NewQuery(this.appctx.Db, this.Giner).SetTable(&rolemodel.RolePo{}).
