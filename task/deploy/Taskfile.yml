@@ -27,6 +27,23 @@ tasks:
         -X "main.GitBranch={{.GIT_BRANCH}}"
         -X "main.BuildTS={{.BUILD_TS}}"'
         -tags=forceposix -o ./deploy/prod/main.exe ./cmd/service/main.go
+  build-linux:
+    vars:
+      GIT_COMMIT:
+        sh: git log -n 1 --format=%h
+      GIT_BRANCH:
+        sh: git rev-parse --abbrev-ref HEAD
+      BUILD_TS:
+        sh: date +"%Y-%m-%d %H:%M:%S"
+    cmds:
+      - >-
+        GOOS=linux GOARCH=amd64
+        go build -ldflags='
+        -X "main.Version={{.VERSION}}"
+        -X "main.GitCommit={{.GIT_COMMIT}}"
+        -X "main.GitBranch={{.GIT_BRANCH}}"
+        -X "main.BuildTS={{.BUILD_TS}}"'
+        -tags=forceposix -o ./deploy/prod/logmon  ./cmd/service/main.go
   version:
     cmds:
       - pwd
