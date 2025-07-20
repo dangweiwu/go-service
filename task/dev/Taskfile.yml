@@ -5,43 +5,41 @@ version: '3'
 vars:
   GREETING: Hello, World!
 
-includes:
-  common:
-    taskfile: ../Taskfile.yml
-    dir: ../../
 
 tasks:
   default:
     cmds:
       - echo "{{.GREETING}}"
     silent: true
-  dockerinit:
+
+  lint:
     cmds:
-      - docker-compose -p goservice -f ./deploy/dev/docker-compose.yaml up -d
-  doc:
-    - go install github.com/dangweiwu/apidoc@v1.0.6
-    - apidoc run -o ./doc/apidoc.md
+      - golangci-lint cache clean
+      - golangci-lint run
+
+  dockerDeploy:
+    cmds:
+      - docker-compose -p {{.PROJECT_NAME}} -f ./deploy/dev/docker-compose.yaml up -d
+
   run:
     cmds:
-      - g use 1.23.3
+      - g use {{.GO_VERSION}}
       - go mod tidy
-      - task: common:lint
-      - docker exec -it {{.dockerName}} go run ./cmd/service/main.go -f ./config/config.yaml run
-  localRun:
+      - task: lint
+      - go run -race -tags=forceposix ./cmd/service/main.go -f ./deploy/dev/config.yaml run
+  initdb:
     cmds:
-      - g use 1.23.3
-      - go mod tidy
-      - task: common:lint
-      - go run -race -tags=forceposix ./cmd/service/main.go -f ./config/config.yaml run
-  localInitdb:
-    cmds:
-      - task: common:lint
+      - task: lint
       - go run ./cmd/service/main.go -f ./config/config.yaml inittable
-  localInitUser:
+
+  initUser:
     cmds:
-      - task: common:lint
+      - task: lint
       - go run ./cmd/service/main.go -f ./config/config.yaml inituser -p a123456
+      
   swagInit:
     cmds:
       - swag init -g ./cmd/service/main.go  --md ./doc -g ./cmd/service/main.go  -o ./doc
+
+  
 

@@ -1,0 +1,34 @@
+# https://taskfile.dev
+#部署mysql mysqladmin redis redisadmin工具使用
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+   # 部署mysql和redis
+  mkData:
+    internal: true
+    cmds:
+      - ssh root@{{.HOST}} "mkdir -p {{.PROJECT_NAME}}/data"
+    status:
+      - ssh root@{{.HOST}} "test -d {{.PROJECT_NAME}}/data" 
+  mkSql:
+    internal: true
+    cmds:
+      - ssh root@{{.HOST}} "mkdir -p {{.PROJECT_NAME}}/sql"
+    status:
+      - ssh root@{{.HOST}} "test -d {{.PROJECT_NAME}}/sql" 
+
+  deploy:
+    cmds:
+      - task: dockerMkData
+      - task: dockerMkSql
+      - scp ./deploy/assets/initdb.sql root@{{.HOST}}:~/{{.PROJECT_NAME}}/sql/initdb.sql
+      - scp ./deploy/assets/docker-compose.yaml root@{{.HOST}}:~/{{.PROJECT_NAME}}/docker-compose.yaml
+      - ssh root@{{.HOST}} "cd {{.PROJECT_NAME}} && podman-compose up -d"
+      - ssh root@{{.HOST}} "pwd && ls {{.PROJECT_NAME}} -ah"
+
+  stop:
+    cmds:
+      - ssh root@{{.HOST}} "cd {{.PROJECT_NAME}} &&podman-compose -f docker-compose.yaml down"

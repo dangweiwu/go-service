@@ -2,30 +2,41 @@
 
 version: '3'
 
+dotenv: ['./.env']
+
+
 vars:
+  # HOST: dev.zuoshiyan.cn
   GREETING: Hello, World!
-  dockerName: goservice_admin
   VERSION: 0.0.0
+  PROJECT_NAME: goservice
+  GO_VERSION: 1.23.3
+
+
 
 includes:
   dev:
     taskfile: ./task/dev/Taskfile.yml
-
   debug:
     taskfile: ./task/debug/Taskfile.yml
-
-  prod:
-    taskfile: ./task/prod/Taskfile.yml
-
   deploy:
     taskfile: ./task/deploy/Taskfile.yml
-
+  sv:
+    taskfile: ./task/deploy/supervisor.yml
+  oo:
+    taskfile: ./task/deploy/openobserve.yml
+  docker:
+    taskfile: ./task/deploy/docker.yml
+  mon:
+    taskfile: ./task/deploy/monitor.yml
+  hey:
+    taskfile: ./task/debug/hey.yaml
 
 tasks:
   default:
     cmds:
-      - echo "{{.GREETING}}"
-    silent: true
+      - echo "{{.ENV_HOST}}"
+    # silent: true
   devm:
     dir: ./cmd/service
     cmds:

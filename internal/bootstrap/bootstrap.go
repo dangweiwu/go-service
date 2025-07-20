@@ -5,7 +5,6 @@ import (
 	"go-service/internal/apiservice"
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -45,7 +44,8 @@ func (this *BootStrap) Init(cfg config.Config) error {
 }
 
 func (this *BootStrap) Run() {
-	signal.Notify(this.quit, syscall.SIGINT, syscall.SIGTERM)
+
+	signal.Notify(this.quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGQUIT)
 	select {
 	case <-this.ctx.Done():
 		return
@@ -57,8 +57,8 @@ func (this *BootStrap) Run() {
 	defer cf()
 	select {
 	case <-shutdownCtx.Done():
-		log.Println("over")
 	case <-time.After(10 * time.Second):
-		log.Println("over")
 	}
+
+	os.Exit(0)
 }

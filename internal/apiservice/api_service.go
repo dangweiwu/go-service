@@ -2,20 +2,21 @@ package apiservice
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"go-service/internal/apiservice/app"
 	"go-service/internal/apiservice/app/doc"
 	"go-service/internal/apiservice/middler"
 	"go-service/internal/apiservice/pkg"
 	"go-service/internal/bootstrap/appctx"
-	"golang.org/x/crypto/acme/autocert"
 	"net/http"
 	"path"
 	"sync"
+
+	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 func Start(appctx *appctx.AppCtx) (err error) {
-	appctx.ApiLog.Msg("init").Info()
+	appctx.Log.Msg("init").Info()
 	gin.SetMode(appctx.Config.Api.Mode)
 	engine := gin.New()
 
@@ -50,15 +51,15 @@ func Start(appctx *appctx.AppCtx) (err error) {
 
 		if err != nil {
 			if err == http.ErrServerClosed {
-				appctx.ApiLog.Msg("api服务安全关闭").Info()
+				appctx.Log.Msg("api服务安全关闭").Info()
 			} else {
-				appctx.ApiLog.Msg("启动服务失败").ErrData(err).Err()
+				appctx.Log.Msg("启动服务失败").ErrData(err).Err()
 			}
 			appctx.Cancel()
 		}
 	}()
 
-	appctx.ApiLog.Msg("服务启动").Data(fmt.Sprintf("host:%s domain:%s", appctx.Config.Api.Host, appctx.Config.Api.Domain)).Info()
+	appctx.Log.Msg("服务启动").Data(fmt.Sprintf("host:%s domain:%s", appctx.Config.Api.Host, appctx.Config.Api.Domain)).Info()
 
 	return nil
 
@@ -74,11 +75,12 @@ func ginRun(actx *appctx.AppCtx, engin *gin.Engine) (err error) {
 	go func() {
 		//安全关闭
 		<-actx.Ctx.Done()
+
 		mu.Lock()
 		if server != nil {
 			err := server.Shutdown(actx.Ctx)
 			if err != nil {
-				actx.ApiLog.Msg("api服务关闭失败").ErrData(err).Err()
+				actx.Log.Msg("api服务关闭失败").ErrData(err).Err()
 			}
 		}
 		mu.Unlock()

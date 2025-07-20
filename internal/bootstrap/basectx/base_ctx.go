@@ -3,13 +3,16 @@ package basectx
 import (
 	"context"
 	"fmt"
+
 	"github.com/dangweiwu/microkit/casbinx"
 	"github.com/dangweiwu/microkit/db/mysqlx"
 	"github.com/dangweiwu/microkit/db/redisx"
-	"github.com/dangweiwu/microkit/observe/logx"
-	"github.com/go-redis/redis/v8"
+
 	"go-service/internal/config"
 	"go-service/internal/pkg/lg"
+
+	"github.com/dangweiwu/microkit/observe/logx"
+	"github.com/go-redis/redis/v8"
 	"gorm.io/gorm"
 )
 
@@ -37,17 +40,19 @@ func BaseBoot(ctx context.Context, cf context.CancelFunc, cfg config.Config) (*B
 	if _lg, err := logx.New(cfg.Log); err != nil {
 		return nil, fmt.Errorf("new logx error :%w", err)
 	} else {
-		sctx.Log = lg.NewBaseLog(_lg, "")
+		sctx.Log = lg.NewBaseLog(_lg, "apiser")
 		sctx.ApiLog = lg.NewBaseLog(_lg, "api")
 		sctx.RpcLog = lg.NewBaseLog(_lg, "rpc")
 		sctx.SerLog = lg.NewBaseLog(_lg, "ser")
 	}
+	//mysql实现
 	if db, err := mysqlx.NewClient(cfg.Mysql); err != nil {
 		return nil, fmt.Errorf("new mysqlx error :%v", err)
 	} else {
 		sctx.Db = db
 	}
 
+	//redis实现
 	if rd, err := redisx.NewClient(cfg.Redis); err != nil {
 		return nil, fmt.Errorf("new Redisx error :%w", err)
 	} else {

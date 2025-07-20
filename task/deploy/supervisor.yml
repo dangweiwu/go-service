@@ -1,0 +1,32 @@
+version: '3'
+# superversion 部署与操作
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord ctl -c /root/supervisor/supervisor.conf"
+
+
+tasks:
+  deploy:
+    cmds:
+      - cmd: ssh root@{{.HOST}} "mkdir supervisor"
+        ignore_error: true
+      - cmd: ssh root@{{.HOST}} "mkdir supervisor/conf.d"
+        ignore_error: true
+      - scp ./deploy/dist/supervisord root@{{.HOST}}:~/supervisor || true
+      - scp ./deploy/assets/supervisor/supervisor.conf root@{{.HOST}}:~/supervisor
+      - scp ./deploy/assets/supervisor/.env root@{{.HOST}}:~/supervisor/.env
+      - ssh root@{{.HOST}} "chmod +x supervisor/supervisord"
+      - echo "finish superversion deploy"
+      
+
+  start:
+    - ssh root@{{.HOST}} "cd supervisor && ./supervisord -d -c /root/supervisor/supervisor.conf --env-file=/root/supervisor/.env"
+  
+  stop:
+    - ssh root@{{.HOST}} "{{.SUP_CLI}}  shutdown"
+  
+  status:
+    - ssh root@{{.HOST}} "{{.SUP_CLI}} status"
+
+  reload:
+    -  ssh root@{{.HOST}} "{{.SUP_CLI}} reload"

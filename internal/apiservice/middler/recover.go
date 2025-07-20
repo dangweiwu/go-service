@@ -2,14 +2,15 @@ package middler
 
 import (
 	"fmt"
-	"github.com/gin-contrib/requestid"
-	"github.com/gin-gonic/gin"
 	"go-service/internal/bootstrap/appctx"
 	"net"
 	"net/http"
 	"os"
 	"runtime/debug"
 	"strings"
+
+	"github.com/gin-contrib/requestid"
+	"github.com/gin-gonic/gin"
 )
 
 func Recovery(appctx *appctx.AppCtx) gin.HandlerFunc {
@@ -34,12 +35,12 @@ func Recovery(appctx *appctx.AppCtx) gin.HandlerFunc {
 					_path = _path + "?" + raw
 				}
 				if brokenPipe {
-					appctx.ApiLog.Msg("网络中断").ErrData(err.(error)).Data("path:" + _path).DataEx("requestid:" + requestid.Get(c)).Err()
+					appctx.Log.Msg("网络中断").ErrData(err.(error)).Data("path:" + _path).DataEx("requestid:" + requestid.Get(c)).Err()
 					c.Error(err.(error)) //nolint: errcheck
 					c.Abort()
 					return
 				}
-				appctx.ApiLog.Msg("系统异常").ErrData(err.(error)).Data(string(debug.Stack())).DataEx("requestid:" + requestid.Get(c)).Err()
+				appctx.Log.Msg("系统异常").ErrData(err.(error)).Data(string(debug.Stack())).DataEx("requestid:" + requestid.Get(c)).Err()
 				c.AbortWithStatus(http.StatusInternalServerError)
 				c.String(500, fmt.Sprintf("%v", err))
 			}

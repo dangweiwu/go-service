@@ -45,9 +45,9 @@ services:
     environment:
       - PMA_HOST=mysql
       - PMA_PORT=3306
-      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_ROOT_PASSWORD=a12346
     networks:
-      -  goservice
+      - goservice
 
 
 
@@ -72,7 +72,7 @@ services:
       retries: 3
 
   redis-admin:
-    image: erikdubbelboer/phpredisadmin
+    image: redislabs/redisinsight:latest
     container_name: goservice_redis-admin
     hostname: redis-commander
     restart: always
@@ -88,40 +88,3 @@ services:
     depends_on:
       redis:
         condition: service_healthy
-
-#  可观测性
-  observe:
-    image: public.ecr.aws/zinclabs/openobserve:v0.10.7
-    container_name: goservice_observe
-    environment:
-      TZ: Asia/Shanghai
-      ZO_DATA_DIR: "/data"
-      ZO_ROOT_USER_EMAIL: "root@qq.com"
-      ZO_ROOT_USER_PASSWORD: "123456"
-    volumes:
-      - "./data/observe:/data"
-    ports:
-      - "15080:5080"
-    networks:
-      - goservice
-#  主程序
-  admin:
-    image: golang:1.23
-    container_name: goservice_admin
-    environment:
-      TZ: Asia/Shanghai
-      GOPROXY: https://goproxy.cn
-    ports:
-      - "10080:80"
-    depends_on: # 依赖容器
-      - redis
-      - mysql
-    stdin_open: true
-    networks:
-      - goservice
-    working_dir: /app
-    volumes:
-      - "../../.:/app"
-    command: "sh"
-#    command: "main -f config/config.yaml run"
-    restart: "always"

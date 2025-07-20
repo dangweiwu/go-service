@@ -1,9 +1,10 @@
 package main
 
 import (
-	flags "github.com/jessevdk/go-flags"
 	"go-service/internal/option"
 	"os"
+
+	flags "github.com/jessevdk/go-flags"
 )
 
 var (

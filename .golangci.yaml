@@ -50,3 +50,6 @@ linters-settings:
       use-field-name: true
       rules:
         json: snake
+  # 添加cyclop配置
+  cyclop:
+    max-complexity: 20

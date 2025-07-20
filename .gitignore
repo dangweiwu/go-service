@@ -1,3 +1,11 @@
 .idea
-deploy/dev/data/
+!deploy/dev/data/docker-compose.yaml
+deploy/dev
 log/
+doc/
+go.mod
+go.sum
+deploy/prod/
+deploy/dist/main
+deploy/dist/main.exe
+.env
