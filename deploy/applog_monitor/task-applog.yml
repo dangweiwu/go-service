@@ -1,0 +1,28 @@
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord -c /root/supervisor/supervisor.conf ctl"
+
+tasks:
+  upConfig:
+    - scp ./logmon.yaml root@{{.SER_HOST}}:{{.PROJECT_NAME}}/config/logmon.yaml
+    - scp ./applog.super.conf root@{{.SER_HOST}}:{{.SUPER_CONFIG_ROOT}}/applog.conf
+
+  upApp:
+    - scp ./logmon.ignore root@{{.SER_HOST}}:{{.PROJECT_NAME}}/logmon
+    - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && chmod 755 logmon"
+  
+  deploy:
+    - task: upConfig
+    - task: upApp
+
+  start:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} start logmon"
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} status"
+  
+  stop:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} stop logmon"
+
+  tail:
+    - ssh root@{{.SER_HOST}} "tail -n 100 -f {{.PROJECT_NAME}}/log/logmon.log"

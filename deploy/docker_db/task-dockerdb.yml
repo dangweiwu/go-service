@@ -1,0 +1,37 @@
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+
+tasks:
+  mkData:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir -p {{.PROJECT_NAME}}/data"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}/data" 
+  mkSql:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir -p {{.PROJECT_NAME}}/sql"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}/sql" 
+  upConfig:
+    - scp ./docker-compose.yaml root@{{.SER_HOST}}:{{.PROJECT_NAME}}/docker-compose.yaml
+    - scp ./initdb.sql root@{{.SER_HOST}}:{{.PROJECT_NAME}}/sql/initdb.sql
+
+  deploy:
+    - task: mkData
+    - task: mkSql
+    - task: upConfig
+  
+  start:
+    - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && podman-compose -f docker-compose.yaml up -d"
+  
+  stop:
+    - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && podman-compose -f docker-compose.yaml down"
+
+  ps:
+    - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && podman-compose -f docker-compose.yaml ps"
+  

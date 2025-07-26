@@ -1,0 +1,45 @@
+version: '3'
+# superversion 部署与操作
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord ctl -c /root/supervisor/supervisor.conf"
+  SER_ROOT: "/root/supervisor"
+
+
+tasks:
+  upconfig:
+    - scp ./supervisor.conf root@{{.HOST}}:{{.SER_ROOT}}
+    - scp ./.env root@{{.HOST}}:{{.SER_ROOT}}
+
+  deploy:
+    cmds:
+      - cmd: ssh root@{{.SER_HOST}} "mkdir {{.SER_ROOT}}"
+        ignore_error: true
+      - cmd: ssh root@{{.SER_HOST}} "mkdir {{.SER_ROOT}}/conf.d"
+        ignore_error: true
+      - scp ./supervisord.ignore root@{{.SER_HOST}}:{{.SER_ROOT}}/supervisord || true
+      - ssh root@{{.SER_HOST}} "chmod +x {{.SER_ROOT}}/supervisord"
+      - task: upconfig
+      - echo "finish superversion deploy"
+      
+  start:
+    - ssh root@{{.SER_HOST}} "cd {{.SER_ROOT}} && ./supervisord -d -c {{.SER_ROOT}}/supervisor.conf --env-file={{.SER_ROOT}}/.env"
+  
+  stop:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}}  shutdown"
+  
+  status:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} status"
+
+  reload:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} reload"
+  
+  restart:
+    cmds:
+      - task: stop
+      - task: start
+      - task: status
+    ignore_error: true
+
+  tail:
+    - ssh root@{{.SER_HOST}} "tail -n 100 -f /root/supervisor/supervisord.log"

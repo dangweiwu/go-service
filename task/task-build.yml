@@ -1,0 +1,62 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord -c /root/supervisor/supervisor.conf ctl"
+
+tasks:
+  default:
+    cmds:
+      - echo "{{.GREETING}}"
+    silent: true
+  lint:
+    cmds:
+      - golangci-lint cache clean
+      - golangci-lint run
+
+  build:
+    vars:
+      GIT_COMMIT:
+        sh: git log -n 1 --format=%h
+      GIT_BRANCH:
+        sh: git rev-parse --abbrev-ref HEAD
+      BUILD_TS:
+        sh: date +"%Y-%m-%d %H:%M:%S"
+    cmds:
+      - g use {{.GO_VERSION}}
+      - go mod tidy
+      - task: lint
+      - >-
+        go build -ldflags='
+        -X "main.Version={{.VERSION}}"
+        -X "main.GitCommit={{.GIT_COMMIT}}"
+        -X "main.GitBranch={{.GIT_BRANCH}}"
+        -X "main.BuildTS={{.BUILD_TS}}"'
+        -tags=forceposix -o ./deploy/dist/main.exe ./cmd/service/main.go
+      - cp ./deploy/dist/main.exe ./deploy/dev/main.exe
+  build-linux:
+    vars:
+      GIT_COMMIT:
+        sh: git log -n 1 --format=%h
+      GIT_BRANCH:
+        sh: git rev-parse --abbrev-ref HEAD
+      BUILD_TS:
+        sh: date +"%Y-%m-%d %H:%M:%S"
+    cmds: 
+      - g use {{.GO_VERSION}}
+      - go mod tidy
+      - task: lint
+      - >-
+        GOOS=linux GOARCH=amd64
+        go build -ldflags='
+        -X "main.Version={{.VERSION}}"
+        -X "main.GitCommit={{.GIT_COMMIT}}"
+        -X "main.GitBranch={{.GIT_BRANCH}}"
+        -X "main.BuildTS={{.BUILD_TS}}"'
+        -tags=forceposix -o ./deploy/dist/main  ./cmd/service/main.go
+  version:
+    cmds:
+      - pwd
+      - ./deploy/dist/main.exe version

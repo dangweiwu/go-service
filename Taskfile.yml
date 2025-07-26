@@ -2,7 +2,7 @@
 
 version: '3'
 
-dotenv: ['./.env']
+dotenv: ['./.task-env']
 
 
 vars:
@@ -15,22 +15,35 @@ vars:
 
 
 includes:
-  dev:
-    taskfile: ./task/dev/Taskfile.yml
-  debug:
-    taskfile: ./task/debug/Taskfile.yml
-  deploy:
-    taskfile: ./task/deploy/Taskfile.yml
-  sv:
-    taskfile: ./task/deploy/supervisor.yml
+
+  super:
+    dir: ./deploy/supervisord
+    taskfile: ./deploy/supervisord/task-supervisor.yml
   oo:
-    taskfile: ./task/deploy/openobserve.yml
-  docker:
-    taskfile: ./task/deploy/docker.yml
-  mon:
-    taskfile: ./task/deploy/monitor.yml
+    dir: ./deploy/openobserve
+    taskfile: ./deploy/openobserve/task-openobserve.yml
+  sermon:
+    dir: ./deploy/service_monitor
+    taskfile: ./deploy/service_monitor/task-monitor.yml
+  api:
+    dir: ./deploy/api_app
+    taskfile: ./deploy/api_app/task-app.yml
+  apilog:
+    dir: ./deploy/applog_monitor
+    taskfile: ./deploy/applog_monitor/task-applog.yml
+  
+  dockerdb:
+    dir: ./deploy/docker_db
+    taskfile: ./deploy/docker_db/task-dockerdb.yml
+
+  dev:
+    taskfile: ./task/task-dev.yml
+  debug:
+    taskfile: ./task/task-debug.yml
+  build:
+    taskfile: ./task/task-build.yml
   hey:
-    taskfile: ./task/debug/hey.yaml
+    taskfile: ./task/task-hey.yaml
 
 tasks:
   default:

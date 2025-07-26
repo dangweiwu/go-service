@@ -1,0 +1,39 @@
+version: '3'
+# logmonitor 部署与操作
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord -c /root/supervisor/supervisor.conf ctl"
+  MONITOR_ROOT: "/root/monitor"
+
+tasks:
+  mkMonitor:
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir {{.MONITOR_ROOT}}"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.MONITOR_ROOT}}"
+
+  deploy:
+    cmds:
+      - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} stop monitor || true"
+      - task: mkMonitor
+      - task: upConfig
+      - scp ./logmon.ignore root@{{.SER_HOST}}:{{.MONITOR_ROOT}}/logmon
+      - ssh root@{{.SER_HOST}} "chmod 755 {{.MONITOR_ROOT}}/logmon"
+      - scp ./monitor.super.conf root@{{.HOST}}:{{.SUPER_CONFIG_ROOT}}/monitor.conf
+      - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} start monitor"
+  
+  upConfig:
+    cmds:
+      - scp ./config.yaml root@{{.SER_HOST}}:{{.MONITOR_ROOT}}
+
+
+  start:
+    cmds:
+      - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} start monitor"
+  stop:
+    cmds:
+      - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} stop monitor"
+
+  tail:
+    cmds:
+      - ssh root@{{.SER_HOST}} "tail -n 100 -f {{.MONITOR_ROOT}}/api.log"

@@ -1,0 +1,2 @@
+SER_HOST=dev.zuoshiyan.cn
+SUPER_CONFIG_ROOT = /root/supervisor/conf.d

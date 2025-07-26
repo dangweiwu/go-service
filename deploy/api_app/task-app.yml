@@ -1,0 +1,83 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  SUP_CLI: "/root/supervisor/supervisord -c /root/supervisor/supervisor.conf ctl"
+
+tasks:
+ 
+  mkRoot:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir {{.PROJECT_NAME}}"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}"
+
+  mkView:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir -p {{.PROJECT_NAME}}/view"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}/view"
+  mkConf:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir -p {{.PROJECT_NAME}}/config"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}/config"
+
+  mkLog:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir -p {{.PROJECT_NAME}}/log"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d {{.PROJECT_NAME}}/log"
+
+  mkdirMonitor:
+    internal: true
+    cmds:
+      - ssh root@{{.SER_HOST}} "mkdir monitor"
+    status:
+      - ssh root@{{.SER_HOST}} "test -d monitor" 
+
+  upMain:
+    cmds:
+      - scp ./deploy/api_main/main.ignore root@{{.SER_HOST}}:~/{{.PROJECT_NAME}}/main
+
+  deploy:
+    cmds:
+      - task: mkRoot
+      - task: mkLog
+      - task: mkView
+      - task: mkConf
+      - task: upConfig
+      - task: upApp
+
+  upConfig:
+    cmds:
+      - scp ./config.yaml root@{{.SER_HOST}}:~/{{.PROJECT_NAME}}/config/config.yaml
+      - scp ./main.super.conf root@{{.SER_HOST}}:{{.SUPER_CONFIG_ROOT}}/main.conf
+  upApp:
+    cmds:
+      - scp ./main.ignore root@{{.SER_HOST}}:~/{{.PROJECT_NAME}}/main
+      - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && chmod 755 main"
+  
+  initDB:
+    cmds:
+      - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && ./main -f conf/config.yaml -e config/.env inittable"
+
+  initUser:
+    cmds:
+      - ssh root@{{.SER_HOST}} "cd {{.PROJECT_NAME}} && ./main -f conf/config.yaml -e config/.env inituser"
+
+  start:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} start main"
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} status"
+  stop:
+    - ssh root@{{.SER_HOST}} "{{.SUP_CLI}} stop main"
+  
+  tail:
+    - ssh root@{{.SER_HOST}} "tail -n 100 -f {{.PROJECT_NAME}}/log/api.log"
+  

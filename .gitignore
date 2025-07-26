@@ -9,3 +9,4 @@ deploy/prod/
 deploy/dist/main
 deploy/dist/main.exe
 .env
+*.ignore
