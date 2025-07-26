@@ -2,13 +2,14 @@ package option
 
 import (
 	"context"
-	"github.com/dangweiwu/microkit/yamlconfig"
 	"go-service/internal/apiservice/app/admin/admin/adminmodel"
 	"go-service/internal/apiservice/pkg"
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
-	"gorm.io/gorm"
 	"log"
+
+	"github.com/dangweiwu/microkit/yamlconfig"
+	"gorm.io/gorm"
 )
 
 type InitSuperUser struct {
@@ -21,6 +22,7 @@ func (this *InitSuperUser) Usage() string {
 
 func (this *InitSuperUser) Execute(args []string) error {
 	var c config.Config
+	loadEnvFile()
 	yamlconfig.MustLoad(Opt.ConfigPath, &c)
 
 	ctx, cf := context.WithCancel(context.Background())

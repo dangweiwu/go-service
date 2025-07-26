@@ -2,11 +2,12 @@ package option
 
 import (
 	"context"
-	"github.com/dangweiwu/microkit/yamlconfig"
 	"go-service/internal/apiservice/app"
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
 	"log"
+
+	"github.com/dangweiwu/microkit/yamlconfig"
 )
 
 type InitTable struct {
@@ -18,6 +19,7 @@ func (*InitTable) Usage() string {
 
 func (this *InitTable) Execute(args []string) error {
 	var c config.Config
+	loadEnvFile()
 	yamlconfig.MustLoad(Opt.ConfigPath, &c)
 
 	ctx, cf := context.WithCancel(context.Background())
