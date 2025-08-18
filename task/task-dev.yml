@@ -20,13 +20,16 @@ tasks:
   dockerDeploy:
     cmds:
       - docker-compose -p {{.PROJECT_NAME}} -f ./deploy/dev/docker-compose.yaml up -d
-
+  modTidy:
+    - g use {{.GO_VERSION}}
+    - go mod tidy
   run:
     cmds:
       - g use {{.GO_VERSION}}
       - go mod tidy
       - task: lint
-      - go run -race -tags=forceposix ./cmd/service/main.go -f ./deploy/dev/config.yaml run
+      - go run -race -tags=forceposix ./cmd/service/main.go -f ./deploy/dev/config.yaml -e ./deploy/dev/.env run
+
   initdb:
     cmds:
       - task: lint

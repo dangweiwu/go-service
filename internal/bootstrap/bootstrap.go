@@ -2,9 +2,9 @@ package bootstrap
 
 import (
 	"context"
-	"go-service/internal/apiservice"
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
+	"go-service/internal/service"
 	"os"
 	"os/signal"
 	"syscall"
@@ -35,11 +35,13 @@ func (this *BootStrap) Init(cfg config.Config) error {
 		return err
 	}
 
-	//启动api服务
-	err = apiservice.Start(actx)
+	//启动服务
+	err = service.Start(actx)
 	if err != nil {
+		actx.Log.Msg("service start failed").ErrData(err).Err()
 		return err
 	}
+
 	return nil
 }
 
@@ -55,10 +57,7 @@ func (this *BootStrap) Run() {
 
 	shutdownCtx, cf := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cf()
-	select {
-	case <-shutdownCtx.Done():
-	case <-time.After(10 * time.Second):
-	}
+	<-shutdownCtx.Done()
 
 	os.Exit(0)
 }

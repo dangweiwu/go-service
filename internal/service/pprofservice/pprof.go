@@ -1,18 +1,18 @@
 package pprofservice
 
 import (
-	"go-service/internal/bootstrap/basectx"
+	"go-service/internal/bootstrap/appctx"
 	"net/http"
 	_ "net/http/pprof"
 )
 
-func PprofStart(ctx *basectx.BaseCtx) {
+func PprofStart(ctx *appctx.AppCtx) {
 
 	if ctx.Config.Pprof.Enable {
 		go func() {
 			err := http.ListenAndServe(ctx.Config.Pprof.Host, nil)
 			if err != nil {
-				ctx.SerLog.Msg("pprof err").ErrData(err).Err()
+				ctx.PproLog.Msg("pprof err").ErrData(err).Err()
 			}
 		}()
 	}

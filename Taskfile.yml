@@ -10,7 +10,7 @@ vars:
   GREETING: Hello, World!
   VERSION: 0.0.0
   PROJECT_NAME: goservice
-  GO_VERSION: 1.23.3
+  GO_VERSION: 1.24.1
 
 
 

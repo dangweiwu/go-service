@@ -2,9 +2,9 @@ package option
 
 import (
 	"context"
-	"go-service/internal/apiservice/app"
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
+	"go-service/internal/service/apiservice/app"
 	"log"
 
 	"github.com/dangweiwu/microkit/yamlconfig"

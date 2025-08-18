@@ -1,12 +1,13 @@
 package config
 
 import (
+	"go-service/internal/service/apiservice/apiconfig"
+	"go-service/internal/service/apiservice/pkg/jwtx/jwtconfig"
+	"go-service/internal/service/pprofservice/pprofcfg"
+
 	"github.com/dangweiwu/microkit/db/mysqlx"
 	"github.com/dangweiwu/microkit/db/redisx"
 	"github.com/dangweiwu/microkit/observe/logx"
-	"go-service/internal/apiservice/apiconfig"
-	"go-service/internal/apiservice/pkg/jwtx/jwtconfig"
-	"go-service/internal/service/pprofservice/pprofcfg"
 )
 
 type Config struct {
