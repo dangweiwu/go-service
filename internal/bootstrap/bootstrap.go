@@ -5,7 +5,6 @@ import (
 	"go-service/internal/bootstrap/appctx"
 	"go-service/internal/config"
 	"go-service/internal/service"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -13,51 +12,37 @@ import (
 
 // block
 type BootStrap struct {
-	ctx    context.Context
-	cancel context.CancelFunc
-	quit   chan os.Signal
+	Ctx    context.Context
+	Cancel context.CancelFunc
 }
 
 func NewBootStrap() *BootStrap {
-	_ctx, closecancel := context.WithCancel(context.Background())
+	ctx, stopSignal := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+
 	return &BootStrap{
-		ctx:    _ctx,
-		cancel: closecancel,
-		quit:   make(chan os.Signal, 1),
+		Ctx:    ctx,
+		Cancel: stopSignal,
 	}
 }
 
 func (this *BootStrap) Init(cfg config.Config) error {
 	var err error
 	//依赖注入
-	actx, err := appctx.NewAppCtx(this.ctx, this.cancel, cfg)
+	actx, err := appctx.NewAppCtx(this.Ctx, this.Cancel, cfg)
 	if err != nil {
 		return err
 	}
 
 	//启动服务
-	err = service.Start(actx)
-	if err != nil {
+	if err := service.Start(actx); err != nil {
 		actx.Log.Msg("service start failed").ErrData(err).Err()
 		return err
 	}
-
 	return nil
 }
 
 func (this *BootStrap) Run() {
-
-	signal.Notify(this.quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP, syscall.SIGQUIT)
-	select {
-	case <-this.ctx.Done():
-		return
-	case <-this.quit:
-		this.cancel()
-	}
-
-	shutdownCtx, cf := context.WithTimeout(context.Background(), 2*time.Second)
-	defer cf()
-	<-shutdownCtx.Done()
-
-	os.Exit(0)
+	<-this.Ctx.Done()
+	this.Cancel()               //取消自定义信号处理器,启用运行时信号处理
+	time.Sleep(5 * time.Second) //5s等待
 }

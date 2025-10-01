@@ -9,13 +9,12 @@ import (
 	"go-service/internal/service/apiservice/pkg"
 	"net/http"
 	"path"
-	"sync"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/acme/autocert"
 )
 
-func Start(appctx *appctx.AppCtx) (err error) {
+func Start(appctx *appctx.AppCtx) {
 	appctx.ApiLog.Msg("init").Info()
 	gin.SetMode(appctx.Config.Api.Mode)
 	engine := gin.New()
@@ -40,74 +39,41 @@ func Start(appctx *appctx.AppCtx) (err error) {
 	//注册所有路由
 	app.InitRouter(appctx, engine)
 	pkg.NewAllUrl(engine).InitUrl()
-	//注册所有数据库
-	//err = app.Regdb(appctx)
-	//if err != nil {
-	//	appctx.ApiLog.Msg("注册数据库失败").ErrData(err).Err()
-	//	return
-	//}
-	go func() {
-		err := ginRun(appctx, engine)
 
-		if err != nil {
-			if err == http.ErrServerClosed {
-				appctx.Log.Msg("api服务安全关闭").Info()
-			} else {
-				appctx.Log.Msg("启动服务失败").ErrData(err).Err()
-			}
-			appctx.Cancel()
-		}
-	}()
-
-	appctx.ApiLog.Msg("服务启动").Data(fmt.Sprintf("host:%s domain:%s", appctx.Config.Api.Host, appctx.Config.Api.Domain)).Info()
-
-	return nil
-
-}
-
-func ginRun(actx *appctx.AppCtx, engin *gin.Engine) (err error) {
-	var (
-		server *http.Server
-		m      *autocert.Manager
-		mu     sync.Mutex // 互斥锁，用于保护 server 变量
-	)
-
-	go func() {
-		//安全关闭
-		<-actx.Ctx.Done()
-
-		mu.Lock()
-		if server != nil {
-			err := server.Shutdown(actx.Ctx)
-			if err != nil {
-				actx.Log.Msg("api服务关闭失败").ErrData(err).Err()
-			}
-		}
-		mu.Unlock()
-	}()
-
-	if len(actx.Config.Api.Domain) == 0 {
-		mu.Lock()
-		server = &http.Server{
-			Addr:    actx.Config.Api.Host,
-			Handler: engin,
-		}
-		mu.Unlock()
-		return server.ListenAndServe()
-
-	} else {
-		m = &autocert.Manager{
-			Prompt:     autocert.AcceptTOS,                                      // 接受 Let's Encrypt 的服务条款
-			Cache:      autocert.DirCache(path.Join(actx.Config.Root, "cache")), // 存储证书的位置
-			HostPolicy: autocert.HostWhitelist(actx.Config.Api.Domain),          // 允许的域名
-			Email:      actx.Config.Api.Email,
-		}
-		mu.Lock()
-		server = &http.Server{
-			Handler: engin,
-		}
-		mu.Unlock()
-		return server.Serve(m.Listener())
+	server := &http.Server{
+		Handler: engine,
 	}
 
+	if len(appctx.Config.Api.Domain) == 0 {
+		server.Addr = appctx.Config.Api.Host
+		go func() {
+			if err := server.ListenAndServe(); err != nil {
+				if err != http.ErrServerClosed {
+					appctx.Log.Msg("启动服务失败").ErrData(err).Err()
+				}
+			}
+		}()
+	} else {
+		m := &autocert.Manager{
+			Prompt:     autocert.AcceptTOS,                                        // 接受 Let's Encrypt 的服务条款
+			Cache:      autocert.DirCache(path.Join(appctx.Config.Root, "cache")), // 存储证书的位置
+			HostPolicy: autocert.HostWhitelist(appctx.Config.Api.Domain),          // 允许的域名
+			Email:      appctx.Config.Api.Email,
+		}
+		go func() {
+			if err := server.Serve(m.Listener()); err != nil {
+				if err != http.ErrServerClosed {
+					appctx.Log.Msg("启动服务失败").ErrData(err).Err()
+				}
+			}
+		}()
+	}
+	appctx.ApiLog.Msg("服务启动").Data(fmt.Sprintf("host:%s domain:%s", appctx.Config.Api.Host, appctx.Config.Api.Domain)).Info()
+
+	<-appctx.Ctx.Done()
+	if err := server.Shutdown(appctx.Ctx); err != nil {
+		appctx.Log.Msg("api服务关闭失败").ErrData(err).Err()
+	} else {
+		appctx.ApiLog.Msg("api服务安全关闭").Info()
+	}
 }

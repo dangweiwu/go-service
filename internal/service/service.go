@@ -12,13 +12,7 @@ type ServiceCtx struct {
 // 所有服务在这完成依赖注入
 func Start(appctx *appctx.AppCtx) error {
 	// //启动api服务
-	err := apiservice.Start(appctx)
-	if err != nil {
-		appctx.Log.Msg("api service start failed").ErrData(err).Err()
-		return err
-	}
-
+	apiservice.Start(appctx)
 	pprofservice.PprofStart(appctx)
-
 	return nil
 }
